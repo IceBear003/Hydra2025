@@ -1,0 +1,269 @@
+$date
+	Sat Apr 26 04:20:38 2025
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1ns
+$end
+$scope module tb_k_top_heap $end
+$var wire 20 ! kth_number [19:0] $end
+$var reg 1 " clk $end
+$var reg 1 # enable $end
+$var reg 1 $ heap_type $end
+$var reg 4 % k [3:0] $end
+$var reg 20 & number [19:0] $end
+$var reg 1 ' rst_n $end
+$scope module k_top_heap $end
+$var wire 1 " clk $end
+$var wire 1 # enable $end
+$var wire 1 $ heap_type $end
+$var wire 4 ( k [3:0] $end
+$var wire 20 ) kth_number [19:0] $end
+$var wire 20 * number [19:0] $end
+$var wire 1 ' rst_n $end
+$var parameter 32 + WIDTH $end
+$scope begin heap_regs[0] $end
+$var wire 20 , value [19:0] $end
+$var parameter 2 - i $end
+$upscope $end
+$scope begin heap_regs[1] $end
+$var wire 20 . value [19:0] $end
+$var parameter 2 / i $end
+$upscope $end
+$scope begin heap_regs[2] $end
+$var wire 20 0 value [19:0] $end
+$var parameter 3 1 i $end
+$upscope $end
+$scope begin heap_regs[3] $end
+$var wire 20 2 value [19:0] $end
+$var parameter 3 3 i $end
+$upscope $end
+$scope begin heap_regs[4] $end
+$var wire 20 4 value [19:0] $end
+$var parameter 4 5 i $end
+$upscope $end
+$scope begin heap_regs[5] $end
+$var wire 20 6 value [19:0] $end
+$var parameter 4 7 i $end
+$upscope $end
+$scope begin heap_regs[6] $end
+$var wire 20 8 value [19:0] $end
+$var parameter 4 9 i $end
+$upscope $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+$comment Show the parameter values. $end
+$dumpall
+b110 9
+b101 7
+b100 5
+b11 3
+b10 1
+b1 /
+b0 -
+b10100 +
+$end
+#0
+$dumpvars
+bx 8
+bx 6
+bx 4
+bx 2
+bx 0
+bx .
+bx ,
+bx *
+bx )
+b101 (
+0'
+bx &
+b101 %
+1$
+0#
+1"
+bx !
+$end
+#1
+0"
+#2
+b11111111111111111111 8
+b11111111111111111111 6
+b0 4
+b0 2
+b0 0
+b0 .
+b0 !
+b0 )
+b0 ,
+1'
+1"
+#3
+0"
+#4
+b1101 &
+b1101 *
+1"
+#5
+0"
+#6
+1#
+1"
+#7
+0"
+#8
+b1101 4
+b1001 &
+b1001 *
+1"
+#9
+0"
+#10
+b1001 2
+b1010 &
+b1010 *
+1"
+#11
+0"
+#12
+b1001 0
+b1010 2
+b1 &
+b1 *
+1"
+#13
+0"
+#14
+b1 .
+b111 &
+b111 *
+1"
+#15
+0"
+#16
+b1 !
+b1 )
+b1 ,
+b111 .
+b110 &
+b110 *
+1"
+#17
+0"
+#18
+b110 !
+b110 )
+b110 ,
+b10110 &
+b10110 *
+1"
+#19
+0"
+#20
+b111 !
+b111 )
+b111 ,
+b1001 .
+b1010 0
+b1101 2
+b10110 4
+b1100 &
+b1100 *
+0#
+1"
+#21
+0"
+#22
+b10 %
+b10 (
+0$
+0'
+1"
+#23
+0"
+#24
+b11111111111111111111 !
+b11111111111111111111 )
+b11111111111111111111 ,
+b11111111111111111111 .
+b0 0
+b0 2
+b0 4
+b0 6
+b0 8
+1'
+1"
+#25
+0"
+#26
+b1101 &
+b1101 *
+1"
+#27
+0"
+#28
+1#
+1"
+#29
+0"
+#30
+b1101 .
+b1001 &
+b1001 *
+1"
+#31
+0"
+#32
+b1101 !
+b1101 )
+b1101 ,
+b1001 .
+b1010 &
+b1010 *
+1"
+#33
+0"
+#34
+b1010 !
+b1010 )
+b1010 ,
+b1 &
+b1 *
+1"
+#35
+0"
+#36
+b1001 !
+b1001 )
+b1001 ,
+b1 .
+b111 &
+b111 *
+1"
+#37
+0"
+#38
+b111 !
+b111 )
+b111 ,
+b110 &
+b110 *
+1"
+#39
+0"
+#40
+b110 !
+b110 )
+b110 ,
+b10110 &
+b10110 *
+1"
+#41
+0"
+#42
+b1100 &
+b1100 *
+0#
+1"
