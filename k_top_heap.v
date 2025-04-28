@@ -19,7 +19,7 @@ wire comp [8:0];
 assign comp[8] = 1'b0;
 
 genvar i;
-generate for(i = 0; i < 7; i = i + 1) begin: heap_regs
+generate for(i = 0; i < 8; i = i + 1) begin: heap_regs
     wire [19:0] value = heap[i];
     assign comp[i] = ~heap_type ^ (number > heap[i]);
 
