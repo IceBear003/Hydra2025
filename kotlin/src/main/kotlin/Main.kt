@@ -11,20 +11,20 @@ fun main(args: Array<String>) {
         val matrices = mutableListOf<MutableList<Double>>()
         val combined = mutableListOf<Double>()
 
-        val theta = listOf(0.0, 0.5, 1.0, 0.5, 0.0, -0.5, -1.0, -0.5)
-        theta.forEachIndexed { index, angleSin ->
-            val outputFile = File("$directory\\frame$i", "combined_origin.txt")
+//        val theta = listOf(0.0, 0.5, 1.0, 0.5, 0.0, -0.5, -1.0, -0.5)
+//        theta.forEachIndexed { index, angleSin ->
+            val outputFile = File("$directory\\frame$i", "combined_square.txt")
             val scanner = Scanner(frame)
             repeat(6 * 6) { channel ->
-                val tx = channel / 6
-                val rx = channel % 6
-                val lambda = 4 * tx + rx
-                val weight = lambda * angleSin * -0.5 * PI * 0.25
-                print(cos(weight))
-                print(" ")
-                println(sin(weight))
-                val weightRe = 1 * cos(weight)
-                val weightIm = 1 * sin(weight)
+//                val tx = channel / 6
+//                val rx = channel % 6
+//                val lambda = 4 * tx + rx
+//                val weight = lambda * angleSin * -0.5 * PI * 0.25
+//                print(cos(weight))
+//                print(" ")
+//                println(sin(weight))
+                val weightRe = 1 //* cos(weight)
+                val weightIm = 1 //* sin(weight)
 
                 val matrix = mutableListOf<Double>()
                 repeat(128) { range ->
@@ -44,7 +44,7 @@ fun main(args: Array<String>) {
                         val mag = getMag(imPart, rePart) * 2.0.pow(expPart)
 
                         if (channel == 0) {
-                            combined += mag * mag;
+                            combined += mag * mag
                         } else {
                             combined[range * 96 + velocity] += mag * mag
                         }
@@ -62,7 +62,7 @@ fun main(args: Array<String>) {
                     it.print("\n")
                 }
             }
-        }
+//        }
     }
 }
 
