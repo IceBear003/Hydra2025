@@ -100,8 +100,8 @@ wire signed [14:0] subtrahend = {1'b0, is_max_minuend ? min_man : max_man};
 
 wire signed [14:0] subtraction_result = minuend - subtrahend;
 
-wire postshift_sign;
-wire [13:0] postshift_num;
+wire postshift_sign = subtraction_result[14];
+wire [13:0] postshift_num = subtraction_result[13:0];
 reg [3:0] postshift_bit;
 
 always @(*) begin
