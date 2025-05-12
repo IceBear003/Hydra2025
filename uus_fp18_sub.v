@@ -1,4 +1,3 @@
-//这个文件需要优化，暂无需测试，2025.5.12 8:23
 module uus_fp18_adder (      //unsigned - unsigned = signed
     input clk,
     input rst_n,
@@ -8,8 +7,6 @@ module uus_fp18_adder (      //unsigned - unsigned = signed
     input [17:0] b,         //无符号 减数
     output reg [18:0] diff   //有符号 diff=a-b
 );
-
-
 
 //两周期完成，需要一个打一拍的门控信号
 
@@ -98,7 +95,6 @@ end
 
 //Stage 2: Subtraction and Normalization
 
-//这里应该把减数变成补码，然后算加法更快，待改动
 wire signed [14:0] minuend = {1'b0, is_max_minuend ? max_man : min_man};
 wire signed [14:0] subtrahend = {1'b0, is_max_minuend ? min_man : max_man};
 
