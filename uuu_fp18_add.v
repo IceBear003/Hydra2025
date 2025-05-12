@@ -1,4 +1,4 @@
-module uuu_fp18_adder ( //unsigned + unsigned = unsigned
+module uuu_fp18_add ( //unsigned + unsigned = unsigned
     input clk,
     input rst_n,
     input enable,
