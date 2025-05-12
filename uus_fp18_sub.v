@@ -1,3 +1,4 @@
+//这个文件需要优化，暂无需测试，2025.5.12 8:23
 module uus_fp18_adder (      //unsigned - unsigned = signed
     input clk,
     input rst_n,
@@ -7,6 +8,8 @@ module uus_fp18_adder (      //unsigned - unsigned = signed
     input [17:0] b,         //无符号 减数
     output reg [18:0] diff   //有符号 diff=a-b
 );
+
+
 
 //两周期完成，需要一个打一拍的门控信号
 
@@ -56,32 +59,32 @@ end
 //预移位树，共四层每层14个MUX2，可以实现0~15位的右移操作
 //通过这种方式，动态移位操作从14个MUX14降解到64个MUX2
 
-wire [14:0] preshift_num_l1;
-assign preshift_num_l1[14] = 1'b0;
+wire [13:0] preshift_num_l1;
 genvar preshift_i1;
 generate for(preshift_i1 = 0; preshift_i1 < 14; preshift_i1 = preshift_i1 + 1) begin
-    assign preshift_num_l1[preshift_i1] = preshift_bit[0] ? preshift_num[preshift_i1+1] : preshift_num[preshift_i1];
+    wire left_bit = preshift_i1 + 1 > 13 ? 0 : preshift_num[preshift_i1+1];
+    assign preshift_num_l1[preshift_i1] = preshift_bit[0] ? left_bit : preshift_num[preshift_i1];
 end endgenerate
 
-wire [15:0] preshift_num_l2;
-assign preshift_num_l2[15:14] = 2'b00;
+wire [13:0] preshift_num_l2;
 genvar preshift_i2;
 generate for(preshift_i2 = 0; preshift_i2 < 14; preshift_i2 = preshift_i2 + 1) begin
-    assign preshift_num_l2[preshift_i2] = preshift_bit[1] ? preshift_num_l1[preshift_i2+2] : preshift_num_l1[preshift_i2];
+    wire left_bit = preshift_i2 + 2 > 13 ? 0 : preshift_num_l1[preshift_i2+2];
+    assign preshift_num_l2[preshift_i2] = preshift_bit[1] ? left_bit : preshift_num_l1[preshift_i2];
 end endgenerate
 
-wire [17:0] preshift_num_l3;
-assign preshift_num_l3[17:14] = 4'b0000;
+wire [13:0] preshift_num_l3;
 genvar preshift_i3;
 generate for(preshift_i3 = 0; preshift_i3 < 14; preshift_i3 = preshift_i3 + 1) begin
-    assign preshift_num_l3[preshift_i3] = preshift_bit[2] ? preshift_num_l2[preshift_i3+4] : preshift_num_l2[preshift_i3];
+    wire left_bit = preshift_i3 + 4 > 13 ? 0 : preshift_num_l2[preshift_i3+4];
+    assign preshift_num_l3[preshift_i3] = preshift_bit[2] ? left_bit : preshift_num_l2[preshift_i3];
 end endgenerate
 
-wire [21:0] preshift_num_l4;
-assign preshift_num_l4[21:14] = 8'b00000000;
+wire [13:0] preshift_num_l4;
 genvar preshift_i4;
 generate for(preshift_i4 = 0; preshift_i4 < 14; preshift_i4 = preshift_i4 + 1) begin
-    assign preshift_num_l4[preshift_i4] = preshift_bit[3] ? preshift_num_l3[preshift_i4+8] : preshift_num_l3[preshift_i4];
+    wire left_bit = preshift_i4 + 8 > 13 ? 0 : preshift_num_l3[preshift_i4+8];
+    assign preshift_num_l4[preshift_i4] = preshift_bit[3] ? left_bit : preshift_num_l3[preshift_i4];
 end endgenerate
 
 reg [13:0] min_man;
@@ -89,12 +92,13 @@ always @(posedge clk) begin
     if(~rst_n) begin
         min_man <= 14'b0;
     end else if(enable) begin
-        min_man <= preshift_num_l4[21:8];
+        min_man <= preshift_num_l4;
     end
 end
 
 //Stage 2: Subtraction and Normalization
 
+//这里应该把减数变成补码，然后算加法更快，待改动
 wire signed [14:0] minuend = {1'b0, is_max_minuend ? max_man : min_man};
 wire signed [14:0] subtrahend = {1'b0, is_max_minuend ? min_man : max_man};
 
