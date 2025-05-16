@@ -1,4 +1,4 @@
-module usu_fp18_add (       //unsigned + signed = unsigned
+module usu_fp18_acc (       //unsigned + signed = unsigned
     input clk,
     input rst_n,
 
@@ -152,7 +152,7 @@ always @(posedge clk) begin
         case({en, rst})
             2'b01: sum <= 18'b0;
             2'b10: sum <= {max_exp - postshift_bit, postshift_num_l4[14:1]};
-            2'b11: sum <= b;
+            2'b11: sum <= b[17:0];  //如果en和rst均为高，b一定是正数
         endcase
     end
 end
