@@ -20,7 +20,7 @@ wire [13:0] b_man = b[13:0];
 
 wire comp = a_exp > b_exp;
 
-reg signed [14:0] max_man;
+reg [14:0] max_man;
 reg [4:0] max_exp;
 
 always @(*) begin
@@ -82,18 +82,11 @@ generate for(preshift_i4 = 0; preshift_i4 < 14; preshift_i4 = preshift_i4 + 1) b
     assign preshift_num_l4[preshift_i4] = preshift_bit[3] ? left_bit : preshift_num_l3[preshift_i4];
 end endgenerate
 
-reg signed [14:0] min_man;
-always @(posedge clk) begin
-    if(~rst_n) begin
-        min_man <= 15'b0;
-    end else if(enable) begin
-        min_man <= {preshift_sign, preshift_num_l4};
-    end
-end
+wire [14:0] min_man = {preshift_sign, preshift_num_l4};
 
 //Stage 2: Addition and Normalization
 
-wire signed [15:0] sum_man = min_man + max_man; //一定是正数，注意这里是15位（带符号位注意这里是15位，比加数多一位，因为可能两个正数相加进一位，也可能一正一负，退0~14位），比加数多一位，因为可能两个正数相加进一位，也可能一正一负，退0~14位
+wire [14:0] sum_man = min_man + max_man; //一定是正数，无符号位
 
 wire [14:0] postshift_num = sum_man[14:0];
 reg [3:0] postshift_bit;
@@ -117,6 +110,7 @@ always @(*) begin
         15'b000000000000001: postshift_bit = 4'b1110;
         15'b000000000000000: postshift_bit = 4'b1111;
     endcase
+    postshift_bit = postshift_bit <= max_exp ? postshift_bit : max_exp;
 end
 
 //后移位树，共四层每层14个MUX2，可以实现0~15位的左移操作
@@ -153,7 +147,7 @@ end endgenerate
 always @(*) begin
     if(~rst_n) begin
         sum <= 18'b0;
-    end else if(enable_d) begin
+    end else if(enable) begin
         sum <= {max_exp - postshift_bit, postshift_num_l4[14:1]};
     end
 end
