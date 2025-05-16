@@ -2,8 +2,8 @@ module uuu_fp18_acc (
     input clk,
     input rst_n,
 
-    input reset,
-    input enable,
+    input rst,
+    input en,
 
     input [17:0] a,
     input [17:0] b,
@@ -77,7 +77,7 @@ always @(posedge clk) begin
     if(~rst_n) begin
         sum <= 18'b0;
     end else begin
-        case({enable, reset})
+        case({en, rst})
             2'b01: sum <= 18'b0;
             2'b10: sum <= sum_man[14] ? {max_exp + 1, sum_man[14:1]} : {max_exp, sum_man[13:0]};    //后移位
             2'b11: sum <= b;

@@ -2,7 +2,7 @@ module uus_fp18_sub (      //unsigned - unsigned = signed
     input clk,
     input rst_n,
 
-    input enable,
+    input en,
 
     input [17:0] a,          //无符号 被减数
     input [17:0] b,          //无符号 减数
@@ -141,7 +141,7 @@ end endgenerate
 always @(posedge clk) begin
     if(~rst_n) begin
         diff <= 19'b0;
-    end else if(enable) begin
+    end else if(en) begin
         diff <= {postshift_sign, max_exp - postshift_bit, postshift_num_l4};
     end
 end

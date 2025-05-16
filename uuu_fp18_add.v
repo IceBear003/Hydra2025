@@ -2,7 +2,7 @@ module uuu_fp18_add (
     input clk,
     input rst_n,
 
-    input enable,
+    input en,
 
     input [17:0] a,
     input [17:0] b,
@@ -76,7 +76,7 @@ wire [3:0] sum_exp = {3'b000, sum_man[14]} + max_exp;
 always @(posedge clk) begin
     if(~rst_n) begin
         sum <= 18'b0;
-    end else if(~enable) begin
+    end else if(~en) begin
     end else if(sum_man[14]) begin              //后移位
         sum <= {sum_exp, sum_man[14:1]};
     end else begin

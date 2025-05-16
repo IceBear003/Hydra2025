@@ -1,4 +1,4 @@
-`include "uuu_fp18_add.v"
+`include "uuu_fp18_acc.v"
 module accumulators(
     input clk,
     input rst_n,
@@ -9,7 +9,7 @@ module accumulators(
     input accumulator_en,
     input [6*18-1:0] magnitudes,
 
-    output os_en,
+    output reg os_en,
     output [6*18-1:0] accumulations
 );
 
@@ -32,17 +32,11 @@ always @(posedge clk) begin
     end
 end
 
-reg accumulation_over;
-reg accumulation_over_d1;
-assign os_en = accumulation_over_d1;
-
 always @(posedge clk) begin
     if(~rst_n) begin
-        accumulation_over <= 0;
-        accumulation_over_d1 <= 0;
+        os_en <= 0;
     end else begin
-        accumulation_over <= (rx_cnt == rx) && (tx_cnt == tx) && accumulator_en;
-        accumulation_over_d1 <= accumulation_over;
+        os_en <= (rx_cnt == rx) && (tx_cnt == tx) && accumulator_en;
     end
 end
 
@@ -53,12 +47,12 @@ wire [17:0] accumulation;
 assign accumulations[index*18+17:index*18] = accumulation;
 wire [17:0] magnitude = magnitudes[index*18+17:index*18];
 
-uuu_fp18_add adder (
+uuu_fp18_acc accumulator (
     .clk(clk),
     .rst_n(rst_n),
 
-    .enable(accumulator_en),
-    .rst(accumulation_over_d1),
+    .en(accumulator_en),
+    .rst(os_en),
 
     .a(accumulation),
     .b(magnitude),

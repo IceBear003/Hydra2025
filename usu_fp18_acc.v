@@ -2,7 +2,8 @@ module usu_fp18_add (       //unsigned + signed = unsigned
     input clk,
     input rst_n,
 
-    input enable,
+    input en,
+    input rst,
 
     input [17:0] a,         //无符号，正数
     input [18:0] b,         //有符号，可正可负，绝对值一定比a小
@@ -144,11 +145,15 @@ generate for(postshift_i4 = 0; postshift_i4 < 15; postshift_i4 = postshift_i4 + 
     assign postshift_num_l4[postshift_i4] = postshift_bit[3] ? right_bit : postshift_num_l3[postshift_i4];
 end endgenerate
 
-always @(*) begin
+always @(posedge clk) begin
     if(~rst_n) begin
         sum <= 18'b0;
-    end else if(enable) begin
-        sum <= {max_exp - postshift_bit, postshift_num_l4[14:1]};
+    end else begin
+        case({en, rst})
+            2'b01: sum <= 18'b0;
+            2'b10: sum <= {max_exp - postshift_bit, postshift_num_l4[14:1]};
+            2'b11: sum <= b;
+        endcase
     end
 end
 
