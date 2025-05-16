@@ -1,9 +1,9 @@
-module usu_fp18_acc (       //unsigned + signed = unsigned
+module usu_fp18_acc (
     input clk,
     input rst_n,
 
+    input clear,
     input en,
-    input rst,
 
     input [17:0] a,         //无符号，正数
     input [18:0] b,         //有符号，可正可负，绝对值一定比a小
@@ -149,7 +149,7 @@ always @(posedge clk) begin
     if(~rst_n) begin
         sum <= 18'b0;
     end else begin
-        case({en, rst})
+        case({en, clear})
             2'b01: sum <= 18'b0;
             2'b10: sum <= {max_exp - postshift_bit, postshift_num_l4[14:1]};
             2'b11: sum <= b[17:0];  //如果en和rst均为高，b一定是正数

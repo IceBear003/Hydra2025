@@ -2,51 +2,49 @@ module magnitude_estimators(
     input clk,
     input rst_n,
     
-    input data_vld,
-    input [6*32-1:0] data_in,
+    input en,
+    input [6*32-1:0] number_flat,
 
-    output reg accumulator_en,
-    output [6*18-1:0] magnitudes
+    output reg next_en,
+    output [6*18-1:0] magnitude_flat
 );
 
 always @(posedge clk) begin
     if(~rst_n) begin
-        accumulator_en <= 0;
+        next_en <= 0;
     end else begin
-        accumulator_en <= data_vld;
+        next_en <= en;
     end
 end
 
-genvar index;
-generate for(index = 0; index < 6; index = index + 1) begin : ME
+genvar i;
+generate for(i = 0; i < 6; i = i + 1) begin : Estimator
+    wire [31:0] number = number_flat[i*32+31:i*32];
 
-wire [31:0] datum = data_in[index*32+31:index*32];
+    wire [13:0] im = number[27:14];
+    wire [13:0] re = number[13:0];
 
-wire [13:0] im = datum[27:14];
-wire [13:0] re = datum[13:0];
+    wire [13:0] im_abs = im[12:0] ^ {13{im[13]}} + im[13];
+    wire [13:0] re_abs = re[12:0] ^ {13{re[13]}} + re[13];
 
-wire [13:0] im_abs = im[12:0] ^ {13{im[13]}} + im[13];
-wire [13:0] re_abs = re[12:0] ^ {13{re[13]}} + re[13];
+    wire [3:0] exp = {~number[31], number[30:28]};            //补码转移码，最高位取反
+    wire [13:0] max = (im_abs > re_abs) ? im_abs : re_abs;
+    wire [13:0] min = (im_abs > re_abs) ? re_abs : im_abs;
 
-wire [3:0] exp = {~datum[31], datum[30:28]};            //补码转移码，最高位取反
-wire [13:0] max = (im_abs > re_abs) ? im_abs : re_abs;
-wire [13:0] min = (im_abs > re_abs) ? re_abs : im_abs;
+    wire [13:0] sum = max + {2'b00, min[13:2]};
 
-wire [13:0] sum = max + {2'b00, min[13:2]};
+    reg [17:0] magnitude;
+    assign magnitude_flat[i*18+17:i*18] = magnitude;
 
-reg [17:0] magnitude;
-assign magnitudes[index*18+17:index*18] = magnitude;
-
-always @(posedge clk) begin
-    if(~rst_n) begin
-        magnitude <= 0;
-    end else if(~data_vld) begin
-    end else if(sum[13]) begin
-        magnitude <= {exp, sum};
-    end else begin
-        magnitude <= {exp - 1, sum[12:0], 1'b0};
+    always @(posedge clk) begin
+        if(~rst_n) begin
+            magnitude <= 0;
+        end else if(~en) begin
+        end else if(sum[13]) begin
+            magnitude <= {exp, sum};
+        end else begin
+            magnitude <= {exp - 1, sum[12:0], 1'b0};
+        end
     end
-end
-
 end endgenerate
 endmodule
