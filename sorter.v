@@ -2,14 +2,40 @@ module sorter(
     input clk,
     input rst_n,
 
+    input [10:0] range,
+
     input en,
-    input rst,
+    input forced_rst,
 
     input [6*18-1:0] accumulations,
 
     output reg diff_en,
+    output diff_rst,
     output [6*18-1:0] rank_3
 );
+
+reg [11:0] range_cnt;
+reg rst;
+assign diff_rst = rst;
+
+always @(posedge clk) begin
+    if(~rst_n) begin
+        range_cnt <= 0;
+    end else if(~en) begin
+    end else if(range_cnt != range + 3) begin
+        range_cnt <= range_cnt + 1;
+    end else begin
+        range_cnt <= 0;
+    end
+end
+
+always @(posedge clk) begin
+    if(~rst_n) begin
+        rst <= 0;
+    end else begin
+        rst <= (range_cnt != range + 3 && en) || forced_rst;
+    end
+end
 
 reg [1:0] old_time_stamp;
 reg [1:0] new_time_stamp;

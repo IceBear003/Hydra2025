@@ -8,21 +8,30 @@ module diff(
     input [6*18-1:0] rank_3s,
 
     output reg summation_en,
+    output reg summer_rst,
     output [3*19-1:0] differences
 );
 
 reg stage_2_en;
 reg stage_3_en;
+reg rst_d1;
+reg rst_d2;
 
 always @(posedge clk) begin
     if(~rst_n) begin
         stage_2_en <= 0;
         stage_3_en <= 0;
         summation_en <= 0;
+        rst_d1 <= 0;
+        rst_d2 <= 0;
+        summer_rst <= 0;
     end else begin
         stage_2_en <= en;
         stage_3_en <= stage_2_en;
         summation_en <= stage_3_en;
+        rst_d1 <= rst;
+        rst_d2 <= rst_d1;
+        summer_rst <= rst_d2;
     end
 end
 

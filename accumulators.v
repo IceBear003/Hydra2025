@@ -6,7 +6,7 @@ module accumulators(
     input [2:0] rx,
     input [2:0] tx,
 
-    input accumulator_en,
+    input en,
     input [6*18-1:0] magnitudes,
 
     output reg sorter_en,
@@ -20,7 +20,7 @@ always @(posedge clk) begin
     if(~rst_n) begin
         rx_cnt <= 0;
         tx_cnt <= 0;
-    end else if(~accumulator_en) begin
+    end else if(~en) begin
     end else if(rx_cnt != rx) begin
         rx_cnt <= rx_cnt + 1;
     end else if(tx_cnt != tx) begin
@@ -34,9 +34,9 @@ end
 
 always @(posedge clk) begin
     if(~rst_n) begin
-        os_en <= 0;
+        sorter_en <= 0;
     end else begin
-        os_en <= (rx_cnt == rx) && (tx_cnt == tx) && accumulator_en;
+        sorter_en <= (rx_cnt == rx) && (tx_cnt == tx) && en;
     end
 end
 
@@ -51,7 +51,7 @@ uuu_fp18_acc accumulator (
     .clk(clk),
     .rst_n(rst_n),
 
-    .en(accumulator_en),
+    .en(en),
     .rst(os_en),
 
     .a(accumulation),

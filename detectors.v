@@ -7,8 +7,17 @@ module detectors(
     input [3*18-1:0] summations,
     input [6*18-1:0] elements,
 
+    output reg buffer_en,
     output reg [5:0] target_detected
 );
+
+always @(posedge clk) begin
+    if(~rst_n) begin
+        buffer_en <= 0;
+    end else begin
+        buffer_en <= en;
+    end
+end
 
 genvar index;
 generate for(index = 0; index < 3; index = index + 1) begin: Detector
