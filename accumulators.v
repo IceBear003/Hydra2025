@@ -9,7 +9,7 @@ module accumulators(
     input accumulator_en,
     input [6*18-1:0] magnitudes,
 
-    output reg os_en,
+    output reg sorter_en,
     output [6*18-1:0] accumulations
 );
 

@@ -25,8 +25,8 @@ wire [31:0] datum = data_in[index*32+31:index*32];
 wire [13:0] im = datum[27:14];
 wire [13:0] re = datum[13:0];
 
-wire [13:0] im_abs = im[13] ? (~im[12:0] + 1'b1) : im[12:0];
-wire [13:0] re_abs = re[13] ? (~re[12:0] + 1'b1) : re[12:0];
+wire [13:0] im_abs = im[12:0] ^ {13{im[13]}} + im[13];
+wire [13:0] re_abs = re[12:0] ^ {13{re[13]}} + re[13];
 
 wire [3:0] exp = {~datum[31], datum[30:28]};            //补码转移码，最高位取反
 wire [13:0] max = (im_abs > re_abs) ? im_abs : re_abs;
