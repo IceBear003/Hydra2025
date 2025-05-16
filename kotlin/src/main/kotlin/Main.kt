@@ -13,7 +13,7 @@ fun main(args: Array<String>) {
 
 //        val theta = listOf(0.0, 0.5, 1.0, 0.5, 0.0, -0.5, -1.0, -0.5)
 //        theta.forEachIndexed { index, angleSin ->
-            val outputFile = File("$directory\\frame$i", "combined_square.txt")
+            val outputFile = File("$directory\\frame$i", "combined_origin.txt")
             val scanner = Scanner(frame)
             repeat(6 * 6) { channel ->
 //                val tx = channel / 6
@@ -44,16 +44,16 @@ fun main(args: Array<String>) {
                         val mag = getMag(imPart, rePart) * 2.0.pow(expPart)
 
                         if (channel == 0) {
-                            combined += mag * mag
+                            combined += mag// * mag
                         } else {
-                            combined[range * 96 + velocity] += mag * mag
+                            combined[range * 96 + velocity] += mag// * mag
                         }
                     }
                 }
                 matrices += matrix
             }
 
-            val combinedDB = combined.map { String.format("%.2f", log10(it) * 10) }
+            val combinedDB = combined.map { String.format("%.2f", it) }
 
             outputFile.delete()
             outputFile.printWriter().use {

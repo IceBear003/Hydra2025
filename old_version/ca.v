@@ -1,10 +1,10 @@
-module ca #(parameter WIDTH = 20)
+module ca
 (
     input clk,
     input rst_n,
 
     input enable,
-    input [WIDTH-1:0] os_result,
+    input [17:0] os_result,
     input [WIDTH-1:0] ca_result,
 
     output [WIDTH-1:0] ca_result_bus_a,

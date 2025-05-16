@@ -1,6 +1,7 @@
-module uuu_fp18_add ( //unsigned + unsigned = unsigned
+module uuu_fp18_add (
     input clk,
     input rst_n,
+
     input enable,
 
     input [17:0] a,
@@ -8,31 +9,18 @@ module uuu_fp18_add ( //unsigned + unsigned = unsigned
     output reg [17:0] sum
 );
 
-//两周期完成，需要一个打一拍的门控信号
-
-reg enable_d;
-always @(posedge clk) begin
-    if(~rst_n) begin
-        enable_d <= 0;
-    end else begin
-        enable_d <= enable;
-    end   
-end
-
-//Stage 1: Comparison and Preshift
+//比较并确定预移位的位数
 
 wire comp = a[17:14] > b[17:14];
 
 reg [13:0] max_man;
 reg [3:0] max_exp;
 
-always @(posedge clk) begin
-    if(~rst_n) begin
-        {max_exp, max_man} <= 0;
-    end else if(comp) begin
-        {max_exp, max_man} <= a;
+always @(*) begin
+    if(comp) begin
+        {max_exp, max_man} = a;
     end else begin
-        {max_exp, max_man} <= b;
+        {max_exp, max_man} = b;
     end
 end
 
@@ -80,27 +68,19 @@ generate for(preshift_i4 = 0; preshift_i4 < 14; preshift_i4 = preshift_i4 + 1) b
     assign preshift_num_l4[preshift_i4] = preshift_bit[3] ? left_bit : preshift_num_l3[preshift_i4];
 end endgenerate
 
-reg [13:0] min_man;
-always @(posedge clk) begin
-    if(~rst_n) begin
-        min_man <= 14'b0;
-    end else if(enable) begin
-        min_man <= preshift_num_l4;
-    end
-end
-
-//Stage 2: Addition and Normalization
+wire [13:0] min_man = preshift_num_l4;
 
 wire [14:0] sum_man = min_man + max_man;
+wire [3:0] sum_exp = {3'b000, sum_man[14]} + max_exp;
 
-always @(*) begin
+always @(posedge clk) begin
     if(~rst_n) begin
         sum <= 18'b0;
-    end else if(~enable_d) begin
-    end else if(sum_man[14]) begin
-        sum <= {max_exp + 1, sum_man[14:1]};
+    end else if(~enable) begin
+    end else if(sum_man[14]) begin              //后移位
+        sum <= {sum_exp, sum_man[14:1]};
     end else begin
-        sum <= {max_exp, sum_man[13:0]};
+        sum <= {sum_exp, sum_man[13:0]};
     end
 end
 

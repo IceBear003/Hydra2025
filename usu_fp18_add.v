@@ -1,6 +1,7 @@
 module usu_fp18_add (       //unsigned + signed = unsigned
     input clk,
     input rst_n,
+
     input enable,
 
     input [17:0] a,         //无符号，正数
@@ -9,35 +10,28 @@ module usu_fp18_add (       //unsigned + signed = unsigned
     output reg [17:0] sum   //无符号，正数
 );
 
-//两周期完成，需要一个打一拍的门控信号
-
-reg enable_d;
-always @(posedge clk) begin
-    if(~rst_n) begin
-        enable_d <= 0;
-    end else begin
-        enable_d <= enable;
-    end   
-end
-
 //Stage 1: Comparison and Preshift
 
-wire comp = a[17:14] > b[17:14];
+wire [3:0] a_exp = a[17:14];
+wire [13:0] a_man = a[13:0];
+wire b_sign = b[18];
+wire [3:0] b_exp = b[17:14];
+wire [13:0] b_man = b[13:0];
+
+wire comp = a_exp > b_exp;
 
 reg signed [14:0] max_man;
 reg [4:0] max_exp;
 
-always @(posedge clk) begin
-    if(~rst_n) begin
-        {max_exp, max_man} <= 0;
-    end else if(comp) begin
-        max_exp <= a[17:14] + 1;    //多加一位，在最后的后移位部分中减回去
-        max_man[14] <= 1'b0;
-        max_man[13:0] <= a[13:0];
+always @(*) begin
+    if(comp) begin
+        max_exp = a[17:14] + 1;    //多加一位，在最后的后移位部分中减回去
+        max_man[14] = 1'b0;
+        max_man[13:0] = a[13:0];
     end else begin
-        max_exp <= b[17:14] + 1;    //多加一位，在最后的后移位部分中减回去
-        max_man[14] <= b[18];
-        max_man[13:0] <= b[13:0];
+        max_exp = b[17:14] + 1;    //多加一位，在最后的后移位部分中减回去
+        max_man[14] = b[18];
+        max_man[13:0] = b[13:0];
     end
 end
 
