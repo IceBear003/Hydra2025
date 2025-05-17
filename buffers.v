@@ -6,6 +6,7 @@ module buffer(
     input en,
 
     input [11:0] range,
+    input [11:0] velocity,
     input [11:0] range_cnt,
     input [11:0] velocity_cnt,
 
@@ -19,7 +20,6 @@ module buffer(
     // output reg [17:0] target_noise,
     output reg [15:0] target_cnt
 );
-
 
 reg [5:0] target_select;
 reg [17:0] target_energy_flat [6:0];
@@ -75,7 +75,8 @@ always @(posedge clk) begin
 end
 
 reg [2:0] index;
-reg wrapped_range_cnt;
+reg [11:0] wrapped_range_cnt;
+reg [11:0] wrapped_velocity_cnt;
 
 always @(*) begin
     casex(target_select_masked)
@@ -87,9 +88,14 @@ always @(*) begin
         6'b100000: index = 5;
         default: index = 6;
     endcase
-    wrapped_range_cnt = range_cnt + index;
+    wrapped_range_cnt = range_cnt + 1;
     if(wrapped_range_cnt > range) begin
         wrapped_range_cnt = wrapped_range_cnt - range;
+    end
+
+    wrapped_velocity_cnt = velocity_cnt + index + 3;
+    if(wrapped_velocity_cnt > velocity) begin
+        wrapped_velocity_cnt = wrapped_velocity_cnt - velocity;
         index = wrapped_range_cnt >= 3 ? 6 : index;
     end
 end
@@ -104,7 +110,7 @@ always @(posedge clk) begin
     end else begin 
         target_vld <= index != 6;
         target_range <= wrapped_range_cnt;
-        target_velocity <= velocity_cnt;
+        target_velocity <= wrapped_velocity_cnt;
         target_energy <= target_energy_flat[index];
         // target_noise <= noises[index];
     end

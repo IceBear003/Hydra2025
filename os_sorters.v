@@ -5,27 +5,33 @@ module os_sorters(
     input [10:0] range,
 
     input forced_clear,
-    input en,
+    input en_external,
 
     input [6*18-1:0] accumulation_flat,
 
     output reg next_en,
     output next_clear,
-    output [6*18-1:0] rank_3_flat
+    output [6*18-1:0] rank_3_flat,
+
+    output reg [11:0] range_cnt,
+    output reg [11:0] velocity_cnt
 );
 
 reg clear;
-reg [11:0] range_cnt;
+wire en_internal = range_cnt > range;
+wire en = en_internal || en_external;
 assign next_clear = clear;
 
 always @(posedge clk) begin
     if(~rst_n) begin
         range_cnt <= 0;
+        velocity_cnt <= 0;
     end else if(~en) begin
     end else if(range_cnt != range + 3) begin
         range_cnt <= range_cnt + 1;
     end else begin
         range_cnt <= 0;
+        velocity_cnt <= velocity_cnt + 1;
     end
 end
 
@@ -34,6 +40,26 @@ always @(posedge clk) begin
         clear <= 0;
     end else begin
         clear <= (range_cnt != range + 3 && en) || forced_clear;
+    end
+end
+
+reg [6*18-1:0] accumulation_storage_1;
+reg [6*18-1:0] accumulation_storage_2;
+reg [6*18-1:0] accumulation_storage_3;
+
+always @(posedge clk) begin
+    if(~rst_n) begin
+        accumulation_storage_1 <= 0;
+        accumulation_storage_2 <= 0;
+        accumulation_storage_3 <= 0;
+    end else if(range_cnt <= 2 && en) begin
+        accumulation_storage_1 <= accumulation_flat;
+        accumulation_storage_2 <= accumulation_storage_1;
+        accumulation_storage_3 <= accumulation_storage_2;
+    end else if(range_cnt > range) begin
+        accumulation_storage_1 <= 0;
+        accumulation_storage_2 <= accumulation_storage_1;
+        accumulation_storage_3 <= accumulation_storage_2;
     end
 end
 
@@ -66,7 +92,7 @@ generate for(i = 0; i < 6; i = i + 1) begin: Sorter
     reg [17:0] ranks [3:0];
     reg [1:0] ages [3:0];
 
-    wire accumulation = accumulation_flat[i*18+17:i*18];
+    wire accumulation = en_internal ? accumulation_storage_3[i*18+17:i*18] : accumulation_flat[i*18+17:i*18];
     assign rank_3_flat[i*18+17:i*18] = ranks[2];
 
     wire [3:0] comps;
