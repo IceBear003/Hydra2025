@@ -37,7 +37,7 @@ always @(posedge clk) begin
     end
 end
 
-wire [14:0] stage_1_sums [4:0];
+wire [17:0] stage_1_sums [4:0];
 
 genvar i1;
 generate for(i1 = 0; i1 < 5; i1 = i1 + 1) begin: Stage_1_Adder
@@ -51,7 +51,7 @@ generate for(i1 = 0; i1 < 5; i1 = i1 + 1) begin: Stage_1_Adder
     );
 end endgenerate
 
-wire [14:0] stage_2_sums [2:0];
+wire [17:0] stage_2_sums [2:0];
 
 genvar i2;
 generate for(i2 = 0; i2 < 3; i2 = i2 + 1) begin: Stage_2_Adder

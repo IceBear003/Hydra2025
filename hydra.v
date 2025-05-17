@@ -10,7 +10,7 @@ module hydra(
     input clk,
     input rst_n,
 
-    input [1:0] command,  //00 - IDLE //01 - configuring //10 - new frame //11 - new data
+    input [1:0] command,
     input [5:0] param,
     
     input data_in_vld,
