@@ -8,14 +8,17 @@ module ca_summers(
 
     input [3*19-1:0] subtraction_flat,
 
+    output reg next_clear,
     output reg next_en,
     output [3*18-1:0] summation_flat
 );
 
 always @(posedge clk) begin
     if(~rst_n) begin
+        next_clear <= 0;
         next_en <= 0;
     end else begin
+        next_clear <= clear;
         next_en <= en;
     end
 end

@@ -2,15 +2,15 @@ module os_sorters(
     input clk,
     input rst_n,
 
-    input [10:0] range,
+    input [11:0] range,
 
     input forced_clear,
     input en_external,
 
     input [6*18-1:0] accumulation_flat,
 
-    output reg next_en,
     output next_clear,
+    output reg next_en,
     output [6*18-1:0] rank_3_flat,
 
     output reg [11:0] range_cnt,
@@ -121,7 +121,7 @@ generate for(i = 0; i < 6; i = i + 1) begin: Sorter
     assign decay[3] = ages[0] == old_time_stamp;
 
     always @(*) begin
-        case (comps)
+        case (decay)
             4'b0001: decay_i = 0; 
             4'b0010: decay_i = 1; 
             4'b0100: decay_i = 2; 

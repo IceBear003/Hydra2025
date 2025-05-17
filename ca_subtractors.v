@@ -9,8 +9,8 @@ module ca_subtractors(
 
     input [6*18-1:0] rank_3_flat,
 
-    output reg next_en,
     output reg next_clear,
+    output reg next_en,
     output [3*19-1:0] subtraction_flat
 );
 

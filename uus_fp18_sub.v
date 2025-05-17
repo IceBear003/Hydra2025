@@ -84,8 +84,6 @@ wire postshift_sign = sum_man[14];
 wire [13:0] postshift_num = sum_man[13:0];
 reg [3:0] postshift_bit;
 
-wire [13:0] test = postshift_num ^ {14{postshift_sign}};
-
 always @(*) begin
     casex (postshift_num ^ {14{postshift_sign}})
         14'b1xxxxxxxxxxxxx: postshift_bit = 4'b0000;

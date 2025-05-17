@@ -2,11 +2,13 @@ module cfar_detectors(
     input clk,
     input rst_n,
 
+    input clear,
     input en,
 
     input [3*18-1:0] summation_flat,
     input [6*18-1:0] magnitude_flat,
 
+    output reg next_clear,
     output reg next_en,
     output [5:0] detection_flat,
     output [6*18-1:0] energy_flat
@@ -14,8 +16,10 @@ module cfar_detectors(
 
 always @(posedge clk) begin
     if(~rst_n) begin
+        next_clear <= 0;
         next_en <= 0;
     end else begin
+        next_clear <= clear;
         next_en <= en;
     end
 end

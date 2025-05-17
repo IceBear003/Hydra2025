@@ -12,8 +12,6 @@ module conf(
 );
 
 wire configuring = command == 2'b01;
-wire new_frame = command == 2'b10;
-wire new_data = command == 2'b11;
 reg [2:0] state;
 
 always @(posedge clk) begin

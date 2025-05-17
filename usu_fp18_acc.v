@@ -14,10 +14,7 @@ module usu_fp18_acc (
 //Stage 1: Comparison and Preshift
 
 wire [3:0] a_exp = a[17:14];
-wire [13:0] a_man = a[13:0];
-wire b_sign = b[18];
 wire [3:0] b_exp = b[17:14];
-wire [13:0] b_man = b[13:0];
 
 wire comp = a_exp > b_exp;
 
