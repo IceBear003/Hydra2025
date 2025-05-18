@@ -11,7 +11,7 @@ module buffer(
     input [11:0] velocity_cnt,
 
     input [5:0] detection_flat,
-    input [6*18-1:0] energy_flat,
+    input [6*18-1:0] energy_sqrt_flat,
 
     output reg target_vld,
     output reg [11:0] target_range,
@@ -22,7 +22,7 @@ module buffer(
 );
 
 reg [5:0] target_select;
-reg [17:0] target_energy_flat [6:0];
+reg [17:0] target_energy_sqrt_flat [6:0];
 reg [5:0] mask;
 wire [5:0] target_select_masked = target_select & mask;
 
@@ -57,20 +57,20 @@ end
 
 always @(posedge clk) begin
     if(~rst_n) begin
-        target_energy_flat[0] <= 0;
-        target_energy_flat[1] <= 0;
-        target_energy_flat[2] <= 0;
-        target_energy_flat[3] <= 0;
-        target_energy_flat[4] <= 0;
-        target_energy_flat[5] <= 0;
-        target_energy_flat[6] <= 0;
+        target_energy_sqrt_flat[0] <= 0;
+        target_energy_sqrt_flat[1] <= 0;
+        target_energy_sqrt_flat[2] <= 0;
+        target_energy_sqrt_flat[3] <= 0;
+        target_energy_sqrt_flat[4] <= 0;
+        target_energy_sqrt_flat[5] <= 0;
+        target_energy_sqrt_flat[6] <= 0;
     end else if(en) begin
-        target_energy_flat[0] <= energy_flat[17:0];
-        target_energy_flat[1] <= energy_flat[35:18];
-        target_energy_flat[2] <= energy_flat[53:36];
-        target_energy_flat[3] <= energy_flat[71:54];
-        target_energy_flat[4] <= energy_flat[89:72];
-        target_energy_flat[5] <= energy_flat[107:90];
+        target_energy_sqrt_flat[0] <= energy_sqrt_flat[17:0];
+        target_energy_sqrt_flat[1] <= energy_sqrt_flat[35:18];
+        target_energy_sqrt_flat[2] <= energy_sqrt_flat[53:36];
+        target_energy_sqrt_flat[3] <= energy_sqrt_flat[71:54];
+        target_energy_sqrt_flat[4] <= energy_sqrt_flat[89:72];
+        target_energy_sqrt_flat[5] <= energy_sqrt_flat[107:90];
     end
 end
 
@@ -100,6 +100,11 @@ always @(*) begin
     end
 end
 
+wire [17:0] energy_sqrt = target_energy_sqrt_flat[index];
+wire [13:0] energy_man = {energy_sqrt[13:0] * energy_sqrt[13:0]};
+wire [4:0] energy_exp = energy_sqrt << 1;
+//{18{square_exp_0[4]}} | {square_exp_0, square_man_0}
+
 always @(posedge clk) begin
     if(~rst_n) begin
         target_vld <= 0;
@@ -111,7 +116,7 @@ always @(posedge clk) begin
         target_vld <= index != 6;
         target_range <= wrapped_range_cnt;
         target_velocity <= wrapped_velocity_cnt;
-        target_energy <= target_energy_flat[index];
+        target_energy <= {18{energy_exp[4]}} | {energy_exp, energy_man};
         // target_noise <= noises[index];
     end
 end

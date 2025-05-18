@@ -70,8 +70,8 @@ generate for(preshift_i4 = 0; preshift_i4 < 14; preshift_i4 = preshift_i4 + 1) b
 end endgenerate
 
 wire [13:0] min_man = preshift_num_l4;
-
 wire [14:0] sum_man = min_man + max_man;
+wire [3:0] max_exp_plus = max_exp + 1'b1;
 
 always @(posedge clk) begin
     if(~rst_n) begin
@@ -79,7 +79,7 @@ always @(posedge clk) begin
     end else begin
         case({en, clear})
             2'b01: sum <= 18'b0;
-            2'b10: sum <= sum_man[14] ? {max_exp + 1, sum_man[14:1]} : {max_exp, sum_man[13:0]};    //后移位
+            2'b10: sum <= sum_man[14] ? {max_exp_plus, sum_man[14:1]} : {max_exp, sum_man[13:0]};    //后移位
             2'b11: sum <= b;
         endcase
     end

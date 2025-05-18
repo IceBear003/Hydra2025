@@ -9,7 +9,7 @@ module os_sorters(
 
     input [6*18-1:0] accumulation_flat,
 
-    output next_clear,
+    output next_clear, //改成reg
     output reg next_en,
     output [6*18-1:0] rank_3_flat,
 
@@ -39,7 +39,7 @@ always @(posedge clk) begin
     if(~rst_n) begin
         clear <= 0;
     end else begin
-        clear <= (range_cnt != range + 3 && en) || forced_clear;
+        clear <= (range_cnt == range + 3 && en) || forced_clear;
     end
 end
 

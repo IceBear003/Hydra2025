@@ -1,6 +1,6 @@
 `include "conf.v"
 `include "magnitude_estimators.v"
-`include "magnitude_accumulators.v"
+`include "magnitude_accumulators.v" 
 `include "os_sorters.v"
 `include "ca_subtractors.v"
 `include "ca_summers.v"
@@ -14,9 +14,7 @@ module hydra(
     input [5:0] param,
     
     input data_in_vld,
-    input [6*32-1:0] data_in,
-    input data_detecting_vld,
-    input [6*32-1:0] data_detecting,
+    input [9*32-1:0] data_in,
 
     output target_vld,
     output [11:0] target_range,
@@ -30,6 +28,7 @@ wire [11:0] range;
 wire [11:0] velocity;
 wire [2:0] tx;
 wire [2:0] rx;
+wire capacity_choice;
 
 conf conf(
     .clk(clk),
@@ -39,13 +38,14 @@ conf conf(
     .range(range),
     .velocity(velocity),
     .tx(tx),
-    .rx(rx)
+    .rx(rx),
+    .capacity_choice(capacity_choice)
 );
 
 wire magnitude_accumulators_en;
 wire [6*18-1:0] magnitude_flat;
 
-magnitude_estimators magnitude_estimators_1(
+magnitude_estimators magnitude_estimators(
     .clk(clk),
     .rst_n(rst_n),
     .en(data_in_vld),
@@ -55,7 +55,11 @@ magnitude_estimators magnitude_estimators_1(
 );
 
 wire os_sorters_en;
-wire [6*18-1:0] accumulation_flat;
+wire [9*18-1:0] accumulation_flat;
+wire [6*18-1:0] accumulation_flat_os = {accumulation_flat[161:144], accumulation_flat[143:126], accumulation_flat[107:90], 
+                                        accumulation_flat[71:54],   accumulation_flat[35:18],   accumulation_flat[17:0]};
+wire [6*18-1:0] accumulation_flat_dt = {accumulation_flat[143:126], accumulation_flat[125:108], accumulation_flat[107:90],
+                                        accumulation_flat[89:72],   accumulation_flat[71:54],   accumulation_flat[53:36]};
 
 magnitude_accumulators magnitude_accumulators(
     .clk(clk),
@@ -81,7 +85,7 @@ os_sorters os_sorters(
     .range(range),
     .forced_clear(command == 2'b10),
     .en_external(os_sorters_en),
-    .accumulation_flat(accumulation_flat),
+    .accumulation_flat(accumulation_flat_os),
     .next_clear(ca_subtractors_clear),
     .next_en(ca_subtractors_en),
     .rank_3_flat(rank_3_flat),
@@ -119,26 +123,15 @@ ca_summers ca_summers(
     .summation_flat(summation_flat)
 );
 
-wire [6*18-1:0] detecting_magnitude_flat;
-wire buffer_en;
-wire [5:0] detection_flat;
-wire [6*18-1:0] energy_flat;
-
-magnitude_estimators magnitude_estimators_2(
-    .clk(clk),
-    .rst_n(rst_n),
-    .en(data_detecting_vld),
-    .number_flat(data_detecting),
-    .magnitude_flat(detecting_magnitude_flat)
-);
-
 cfar_detectors cfar_detectors(
     .clk(clk),
     .rst_n(rst_n),
     .clear(cfar_detectors_clear),
-    .en(cfar_detectors_en),
+    .en_external(cfar_detectors_en),
+    .os_sorters_en(os_sorters_en),
+    .capacity_choice(capacity_choice),
     .summation_flat(summation_flat),
-    .magnitude_flat(detecting_magnitude_flat),
+    .accumulation_flat(accumulation_flat_dt),
     .next_clear(buffer_clear),
     .next_en(buffer_en),
     .detection_flat(detection_flat),

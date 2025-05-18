@@ -7,10 +7,10 @@ module magnitude_accumulators(
     input [2:0] tx,
 
     input en,
-    input [6*18-1:0] magnitude_flat,
+    input [9*18-1:0] magnitude_flat,
 
     output reg next_en,
-    output [6*18-1:0] accumulation_flat
+    output [9*18-1:0] accumulation_flat
 );
 
 reg [2:0] rx_cnt;
@@ -41,7 +41,7 @@ always @(posedge clk) begin
 end
 
 genvar i;
-generate for(i = 0; i < 6; i = i + 1) begin: Accumulator
+generate for(i = 0; i < 9; i = i + 1) begin: Accumulator
     wire [17:0] accumulation;
     wire [17:0] magnitude = magnitude_flat[i*18+17:i*18];
     assign accumulation_flat[i*18+17:i*18] = accumulation;

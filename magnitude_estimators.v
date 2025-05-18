@@ -3,10 +3,10 @@ module magnitude_estimators(
     input rst_n,
     
     input en,
-    input [6*32-1:0] number_flat,
+    input [9*32-1:0] number_flat,
 
     output reg next_en,
-    output [6*18-1:0] magnitude_flat
+    output [9*18-1:0] magnitude_flat
 );
 
 always @(posedge clk) begin
@@ -18,7 +18,7 @@ always @(posedge clk) begin
 end
 
 genvar i;
-generate for(i = 0; i < 6; i = i + 1) begin : Estimator
+generate for(i = 0; i < 9; i = i + 1) begin : Estimator
     wire [31:0] number = number_flat[i*32+31:i*32];
 
     wire [13:0] im = number[27:14];
@@ -35,6 +35,7 @@ generate for(i = 0; i < 6; i = i + 1) begin : Estimator
 
     reg [17:0] magnitude;
     assign magnitude_flat[i*18+17:i*18] = magnitude;
+    wire [3:0] exp_minus = exp - 1'b1;
 
     always @(posedge clk) begin
         if(~rst_n) begin
@@ -43,7 +44,7 @@ generate for(i = 0; i < 6; i = i + 1) begin : Estimator
         end else if(sum[13]) begin
             magnitude <= {exp, sum};
         end else begin
-            magnitude <= {exp - 1, sum[12:0], 1'b0};
+            magnitude <= {exp_minus, sum[12:0], 1'b0};
         end
     end
 end endgenerate
