@@ -75,8 +75,6 @@ always @(posedge clk) begin
 end
 
 reg [2:0] index;
-reg [11:0] wrapped_range_cnt;
-reg [11:0] wrapped_velocity_cnt;
 
 always @(*) begin
     casex(target_select_masked)
@@ -88,22 +86,29 @@ always @(*) begin
         6'b100000: index = 5;
         default: index = 6;
     endcase
-    wrapped_range_cnt = range_cnt + 1;
-    if(wrapped_range_cnt > range) begin
-        wrapped_range_cnt = wrapped_range_cnt - range;
-    end
-
-    wrapped_velocity_cnt = velocity_cnt + index + 3;
-    if(wrapped_velocity_cnt > velocity) begin
-        wrapped_velocity_cnt = wrapped_velocity_cnt - velocity;
-        index = wrapped_range_cnt >= 3 ? 6 : index;
-    end
 end
 
-wire [17:0] energy_sqrt = target_energy_sqrt_flat[index];
-wire [13:0] energy_man = {energy_sqrt[13:0] * energy_sqrt[13:0]};
-wire [4:0] energy_exp = energy_sqrt << 1;
-//{18{square_exp_0[4]}} | {square_exp_0, square_man_0}
+reg target_index_buf;
+reg [11:0] target_range_buf;
+reg [11:0] target_velocity_buf;
+reg [17:0] target_energy_sqrt_buf;
+
+wire [13:0] energy_man = {target_energy_sqrt_buf[13:0] * target_energy_sqrt_buf[13:0]};
+wire [4:0] energy_exp = target_energy_sqrt_buf[17:14] << 1;
+
+always @(posedge clk) begin
+    if(~rst_n) begin
+        target_index_buf <= 0;
+        target_range_buf <= 0;
+        target_velocity_buf <= 0;
+        target_energy_sqrt_buf <= 0;
+    end else begin 
+        target_index_buf <= index;
+        target_range_buf <= range_cnt + 1;
+        target_velocity_buf <= velocity_cnt + index + 3;
+        target_energy_sqrt_buf <= target_energy_sqrt_flat[index];
+    end
+end
 
 always @(posedge clk) begin
     if(~rst_n) begin
@@ -111,13 +116,11 @@ always @(posedge clk) begin
         target_range <= 0;
         target_velocity <= 0;
         target_energy <= 0;
-        // target_noise <= 0;
     end else begin 
-        target_vld <= index != 6;
-        target_range <= wrapped_range_cnt;
-        target_velocity <= wrapped_velocity_cnt;
+        target_vld <= target_velocity_buf > velocity + 2 ? 0 : target_index_buf != 6;
+        target_range <= target_range_buf > range ? target_range_buf - range : target_range_buf;
+        target_velocity <= target_velocity_buf > velocity ? target_velocity_buf - velocity : target_velocity_buf;
         target_energy <= {18{energy_exp[4]}} | {energy_exp, energy_man};
-        // target_noise <= noises[index];
     end
 end
 

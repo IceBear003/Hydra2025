@@ -43,7 +43,7 @@ conf conf(
 );
 
 wire magnitude_accumulators_en;
-wire [6*18-1:0] magnitude_flat;
+wire [9*18-1:0] magnitude_flat;
 
 magnitude_estimators magnitude_estimators(
     .clk(clk),
@@ -123,11 +123,17 @@ ca_summers ca_summers(
     .summation_flat(summation_flat)
 );
 
+wire buffer_en;
+wire buffer_clear;
+wire [5:0] detection_flat;
+wire [6*18-1:0] energy_sqrt_flat;
+
 cfar_detectors cfar_detectors(
     .clk(clk),
     .rst_n(rst_n),
     .clear(cfar_detectors_clear),
     .en_external(cfar_detectors_en),
+    .range_cnt(range_cnt),
     .os_sorters_en(os_sorters_en),
     .capacity_choice(capacity_choice),
     .summation_flat(summation_flat),
@@ -135,7 +141,7 @@ cfar_detectors cfar_detectors(
     .next_clear(buffer_clear),
     .next_en(buffer_en),
     .detection_flat(detection_flat),
-    .energy_flat(energy_flat)
+    .energy_sqrt_flat(energy_sqrt_flat)
 );
 
 buffer buffer(
@@ -148,7 +154,7 @@ buffer buffer(
     .range_cnt(range_cnt),
     .velocity_cnt(velocity_cnt),
     .detection_flat(detection_flat),
-    .energy_flat(energy_flat),
+    .energy_sqrt_flat(energy_sqrt_flat),
     .target_vld(target_vld),
     .target_range(target_range),
     .target_velocity(target_velocity),

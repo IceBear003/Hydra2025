@@ -5,6 +5,7 @@ module cfar_detectors(
     input clear,
     input en_external,
 
+    input [11:0] range_cnt,
     input os_sorters_en,
     input capacity_choice,  //1-4 0-3
 
@@ -17,7 +18,7 @@ module cfar_detectors(
     output [6*18-1:0] energy_sqrt_flat
 );
 
-wire en_internal;
+wire en_internal = range_cnt > (3 + capacity_choice);
 wire en = en_external && en_internal;
 
 always @(posedge clk) begin

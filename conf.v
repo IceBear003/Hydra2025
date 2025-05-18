@@ -43,7 +43,7 @@ always @(posedge clk) begin
             3'd3: velocity[5:0] <= param;
             3'd4: begin
                 {rx, tx} <= {param[5:3], param[2:0]};
-                capacity_choice <= (param[5:3] + 1) * (param[2:0] + 1) < 6;
+                capacity_choice <= {param[5:3], param[2:0]} == 6'b001001;
             end
         endcase
     end
