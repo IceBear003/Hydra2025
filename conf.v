@@ -12,8 +12,7 @@ module conf(
     output reg [11:0] range,
     output reg [11:0] velocity,
     output reg [2:0] tx,
-    output reg [2:0] rx,
-    output reg capacity_choice
+    output reg [2:0] rx
 );
 
 wire configuring = command == 2'b01;
@@ -41,10 +40,7 @@ always @(posedge clk or negedge rst_n) begin
             3'd1: range[5:0] <= param;
             3'd2: velocity[11:6] <= param;
             3'd3: velocity[5:0] <= param;
-            3'd4: begin
-                {rx, tx} <= {param[5:3], param[2:0]};
-                capacity_choice <= {param[5:3], param[2:0]} == 6'b001001;
-            end
+            3'd4: {rx, tx} <= {param[5:3], param[2:0]};
         endcase
     end
 end

@@ -1,4 +1,4 @@
-`include "usu_fp18_acc.v"
+`include "uuu_fp19_add.v"
 module ca_summers(
     input clk,
     input rst_n,
@@ -6,36 +6,55 @@ module ca_summers(
     input clear,
     input en,
 
-    input [3*19-1:0] subtraction_flat,
+    input [6*19-1:0] rank_3_flat,
 
     output reg next_clear,
     output reg next_en,
-    output [3*18-1:0] summation_flat
+    output [3*19-1:0] summation_flat
 );
+
+reg en_d1;
+reg clear_d1;
 
 always @(posedge clk or negedge rst_n) begin
     if(~rst_n) begin
-        next_clear <= 0;
+        en_d1 <= 0;
         next_en <= 0;
+        clear_d1 <= 0;
+        next_clear <= 0;
     end else begin
-        next_clear <= clear;
-        next_en <= en;
+        en_d1 <= en;
+        next_en <= en_d1;
+        clear_d1 <= clear;
+        next_clear <= clear_d1;
     end
 end
 
-genvar i;
-generate for(i = 0; i < 3; i = i + 1) begin: Summer
-    wire [18:0] subtraction = subtraction_flat[i*19+18:i*19];
-    wire [17:0] summation;
-    assign summation_flat[i*18+17:i*18] = summation;
-        
-    usu_fp18_acc summer(
+wire [18:0] stage_1_sums [4:0];
+
+genvar i1;
+generate for(i1 = 0; i1 < 5; i1 = i1 + 1) begin: Stage_1_Adder
+    uuu_fp19_add adder(
         .clk(clk),
         .rst_n(rst_n),
         .en(en),
-        .clear(clear),
-        .a(summation),
-        .b(subtraction),
+        .a(rank_3_flat[i1*19+18:i1*19]),
+        .b(rank_3_flat[i1*19+37:i1*19+19]),
+        .sum(stage_1_sums[i1])
+    );
+end endgenerate
+
+genvar i2;
+generate for(i2 = 0; i2 < 3; i2 = i2 + 1) begin: Stage_2_Adder
+    wire [18:0] summation;
+    assign summation_flat[i2*19+18:i2*19] = summation;
+
+    uuu_fp19_add adder(
+        .clk(clk),
+        .rst_n(rst_n),
+        .en(en_d1),
+        .a(stage_1_sums[i2]),
+        .b(stage_1_sums[i2+2]),
         .sum(summation)
     );
 end endgenerate

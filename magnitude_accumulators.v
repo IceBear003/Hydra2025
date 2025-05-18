@@ -1,4 +1,4 @@
-`include "uuu_fp18_acc.v"
+`include "uuu_fp19_acc.v"
 module magnitude_accumulators(
     input clk,
     input rst_n,
@@ -7,10 +7,10 @@ module magnitude_accumulators(
     input [2:0] tx,
 
     input en,
-    input [9*18-1:0] magnitude_flat,
+    input [9*19-1:0] magnitude_flat,
 
     output reg next_en,
-    output [9*18-1:0] accumulation_flat
+    output [9*19-1:0] accumulation_flat
 );
 
 reg [2:0] rx_cnt;
@@ -42,11 +42,11 @@ end
 
 genvar i;
 generate for(i = 0; i < 9; i = i + 1) begin: Accumulator
-    wire [17:0] accumulation;
-    wire [17:0] magnitude = magnitude_flat[i*18+17:i*18];
-    assign accumulation_flat[i*18+17:i*18] = accumulation;
+    wire [18:0] accumulation;
+    wire [18:0] magnitude = magnitude_flat[i*19+18:i*19];
+    assign accumulation_flat[i*19+18:i*19] = accumulation;
 
-    uuu_fp18_acc accumulator (
+    uuu_fp19_acc accumulator (
         .clk(clk),
         .rst_n(rst_n),
         .clear(next_en),

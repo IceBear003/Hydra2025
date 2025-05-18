@@ -6,7 +6,7 @@ module magnitude_estimators(
     input [9*32-1:0] number_flat,
 
     output reg next_en,
-    output [9*18-1:0] magnitude_flat
+    output [9*19-1:0] magnitude_flat
 );
 
 always @(posedge clk or negedge rst_n) begin
@@ -27,15 +27,15 @@ generate for(i = 0; i < 9; i = i + 1) begin : Estimator
     wire [13:0] im_abs = im[13] ? (~im + 1'b1) : im;
     wire [13:0] re_abs = re[13] ? (~re + 1'b1) : re;
 
-    wire [3:0] exp = {~number[3], number[2:0]};            //补码转移码，最高位取反
+    wire [4:0] exp = {1'b0, ~number[3], number[2:0]};            //补码转移码，最高位取反
     wire [13:0] max = (im_abs > re_abs) ? im_abs : re_abs;
     wire [13:0] min = (im_abs > re_abs) ? re_abs : im_abs;
 
     wire [13:0] sum = max + {2'b00, min[13:2]};
 
-    reg [17:0] magnitude;
-    assign magnitude_flat[i*18+17:i*18] = magnitude;
-    wire [3:0] exp_minus = exp - 1'b1;
+    reg [18:0] magnitude;
+    assign magnitude_flat[i*19+18:i*19] = magnitude;
+    wire [4:0] exp_minus = exp - 1'b1;
 
     always @(posedge clk or negedge rst_n) begin
         if(~rst_n) begin

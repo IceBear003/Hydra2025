@@ -15,7 +15,7 @@ reg [31:0] data_in [8:0];
 wire target_vld;
 wire [11:0] target_range;
 wire [11:0] target_velocity;
-wire [17:0] target_energy;
+wire [18:0] target_energy;
 wire [15:0] target_cnt;
 
 wire [9*32-1:0] data_in_flat = {data_in[8], data_in[7], data_in[6], 

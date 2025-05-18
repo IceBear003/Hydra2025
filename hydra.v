@@ -2,7 +2,6 @@
 `include "magnitude_estimators.v"
 `include "magnitude_accumulators.v" 
 `include "os_sorters.v"
-`include "ca_subtractors.v"
 `include "ca_summers.v"
 `include "cfar_detectors.v"
 `include "buffers.v"
@@ -19,8 +18,7 @@ module hydra(
     output target_vld,
     output [11:0] target_range,
     output [11:0] target_velocity,
-    output [17:0] target_energy,
-    // output [17:0] target_noise,
+    output [18:0] target_energy,
     output [15:0] target_cnt
 );
 
@@ -28,7 +26,6 @@ wire [11:0] range;
 wire [11:0] velocity;
 wire [2:0] tx;
 wire [2:0] rx;
-wire capacity_choice;
 
 conf conf(
     .clk(clk),
@@ -38,12 +35,11 @@ conf conf(
     .range(range),
     .velocity(velocity),
     .tx(tx),
-    .rx(rx),
-    .capacity_choice(capacity_choice)
+    .rx(rx)
 );
 
 wire magnitude_accumulators_en;
-wire [9*18-1:0] magnitude_flat;
+wire [9*19-1:0] magnitude_flat;
 
 magnitude_estimators magnitude_estimators(
     .clk(clk),
@@ -55,11 +51,11 @@ magnitude_estimators magnitude_estimators(
 );
 
 wire os_sorters_en;
-wire [9*18-1:0] accumulation_flat;
-wire [6*18-1:0] accumulation_flat_os = {accumulation_flat[161:144], accumulation_flat[143:126], accumulation_flat[107:90], 
-                                        accumulation_flat[71:54],   accumulation_flat[35:18],   accumulation_flat[17:0]};
-wire [6*18-1:0] accumulation_flat_dt = {accumulation_flat[143:126], accumulation_flat[125:108], accumulation_flat[107:90],
-                                        accumulation_flat[89:72],   accumulation_flat[71:54],   accumulation_flat[53:36]};
+wire [9*19-1:0] accumulation_flat;
+wire [6*19-1:0] accumulation_flat_os = {accumulation_flat[170:152], accumulation_flat[151:133], accumulation_flat[113:95], 
+                                        accumulation_flat[75:57],   accumulation_flat[37:19],   accumulation_flat[18:0]};
+wire [6*19-1:0] accumulation_flat_dt = {accumulation_flat[151:133], accumulation_flat[132:114], accumulation_flat[113:95],
+                                        accumulation_flat[94:76],   accumulation_flat[75:57],   accumulation_flat[56:38]};
 
 magnitude_accumulators magnitude_accumulators(
     .clk(clk),
@@ -72,9 +68,9 @@ magnitude_accumulators magnitude_accumulators(
     .accumulation_flat(accumulation_flat)
 );
 
-wire ca_subtractors_clear;
-wire ca_subtractors_en;
-wire [6*18-1:0] rank_3_flat;
+wire ca_summers_clear;
+wire ca_summers_en;
+wire [6*19-1:0] rank_3_flat;
 
 wire [11:0] range_cnt;
 wire [11:0] velocity_cnt;
@@ -86,38 +82,23 @@ os_sorters os_sorters(
     .forced_clear(command == 2'b10),
     .en_external(os_sorters_en),
     .accumulation_flat(accumulation_flat_os),
-    .next_clear(ca_subtractors_clear),
-    .next_en(ca_subtractors_en),
+    .next_clear(ca_summers_clear),
+    .next_en(ca_summers_en),
     .rank_3_flat(rank_3_flat),
     .range_cnt(range_cnt),
     .velocity_cnt(velocity_cnt)
 );
 
-wire ca_summers_clear;
-wire ca_summers_en;
-wire [3*19-1:0] subtraction_flat;
-
-ca_subtractors ca_subtractors(
-    .clk(clk),
-    .rst_n(rst_n),
-    .clear(ca_subtractors_clear),
-    .en(ca_subtractors_en),
-    .rank_3_flat(rank_3_flat),
-    .next_clear(ca_summers_clear),
-    .next_en(ca_summers_en),
-    .subtraction_flat(subtraction_flat)
-);
-
 wire cfar_detectors_clear;
 wire cfar_detectors_en;
-wire [3*18-1:0] summation_flat;
+wire [3*19-1:0] summation_flat;
 
 ca_summers ca_summers(
     .clk(clk),
     .rst_n(rst_n),
     .clear(ca_summers_clear),
     .en(ca_summers_en),
-    .subtraction_flat(subtraction_flat),
+    .rank_3_flat(rank_3_flat),
     .next_clear(cfar_detectors_clear),
     .next_en(cfar_detectors_en),
     .summation_flat(summation_flat)
@@ -126,7 +107,7 @@ ca_summers ca_summers(
 wire buffer_en;
 wire buffer_clear;
 wire [5:0] detection_flat;
-wire [6*18-1:0] energy_sqrt_flat;
+wire [6*19-1:0] energy_sqrt_flat;
 
 cfar_detectors cfar_detectors(
     .clk(clk),
@@ -135,7 +116,6 @@ cfar_detectors cfar_detectors(
     .en_external(cfar_detectors_en),
     .range_cnt(range_cnt),
     .os_sorters_en(os_sorters_en),
-    .capacity_choice(capacity_choice),
     .summation_flat(summation_flat),
     .accumulation_flat(accumulation_flat_dt),
     .next_clear(buffer_clear),
@@ -159,7 +139,6 @@ buffers buffers(
     .target_range(target_range),
     .target_velocity(target_velocity),
     .target_energy(target_energy),
-    //.target_noise(),
     .target_cnt(target_cnt)
 );
 endmodule

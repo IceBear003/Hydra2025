@@ -7,11 +7,11 @@ module os_sorters(
     input forced_clear,
     input en_external,
 
-    input [6*18-1:0] accumulation_flat,
+    input [6*19-1:0] accumulation_flat,
 
     output next_clear, //改成reg
     output reg next_en,
-    output [6*18-1:0] rank_3_flat,
+    output [6*19-1:0] rank_3_flat,
 
     output reg [11:0] range_cnt,
     output reg [11:0] velocity_cnt
@@ -46,9 +46,9 @@ always @(posedge clk or negedge rst_n) begin
     end
 end
 
-reg [6*18-1:0] accumulation_storage_1;
-reg [6*18-1:0] accumulation_storage_2;
-reg [6*18-1:0] accumulation_storage_3;
+reg [6*19-1:0] accumulation_storage_1;
+reg [6*19-1:0] accumulation_storage_2;
+reg [6*19-1:0] accumulation_storage_3;
 
 always @(posedge clk or negedge rst_n) begin
     if(~rst_n) begin
@@ -88,12 +88,12 @@ end
 
 genvar i;
 generate for(i = 0; i < 6; i = i + 1) begin: Sorter
-    reg [17:0] ranks [3:0];
+    reg [18:0] ranks [3:0];
     reg [1:0] ages [3:0];
 
-    wire [17:0] accumulation = en_internal ? accumulation_storage_3[i*18+17:i*18] : accumulation_flat[i*18+17:i*18];
-    wire [17:0] rank_3 = ranks[2];
-    assign rank_3_flat[i*18+17:i*18] = rank_3;
+    wire [18:0] accumulation = en_internal ? accumulation_storage_3[i*19+18:i*19] : accumulation_flat[i*19+18:i*19];
+    wire [18:0] rank_3 = ranks[2];
+    assign rank_3_flat[i*19+18:i*19] = rank_3;
 
     wire [3:0] comps;
     reg [2:0] comp_i;
@@ -131,9 +131,9 @@ generate for(i = 0; i < 6; i = i + 1) begin: Sorter
 
     always @(posedge clk or negedge rst_n) begin
         if(~rst_n) begin
-            {ages[0], ranks[0]} <= {2'b00, 18'b0};
+            {ages[0], ranks[0]} <= {2'b00, 19'b0};
         end else if(clear) begin
-            {ages[0], ranks[0]} <= {2'b00, 18'b0};
+            {ages[0], ranks[0]} <= {2'b00, 19'b0};
         end else if(~en) begin
         end else if(comp_i == 0) begin
             {ages[0], ranks[0]} <= {time_stamp, accumulation};
@@ -144,9 +144,9 @@ generate for(i = 0; i < 6; i = i + 1) begin: Sorter
 
     always @(posedge clk or negedge rst_n) begin
         if(~rst_n) begin
-            {ages[1], ranks[1]} <= {2'b00, 18'b0};
+            {ages[1], ranks[1]} <= {2'b00, 19'b0};
         end else if(clear) begin
-            {ages[1], ranks[1]} <= {2'b00, 18'b0};
+            {ages[1], ranks[1]} <= {2'b00, 19'b0};
         end else if(~en) begin
         end else if(comp_i == 1) begin
             {ages[1], ranks[1]} <= {time_stamp, accumulation};
@@ -159,9 +159,9 @@ generate for(i = 0; i < 6; i = i + 1) begin: Sorter
 
     always @(posedge clk or negedge rst_n) begin
         if(~rst_n) begin
-            {ages[2], ranks[2]} <= {2'b00, 18'b0};
+            {ages[2], ranks[2]} <= {2'b00, 19'b0};
         end else if(clear) begin
-            {ages[2], ranks[2]} <= {2'b00, 18'b0};
+            {ages[2], ranks[2]} <= {2'b00, 19'b0};
         end else if(~en) begin
         end else if(comp_i == 2) begin
             {ages[2], ranks[2]} <= {time_stamp, accumulation};
@@ -174,9 +174,9 @@ generate for(i = 0; i < 6; i = i + 1) begin: Sorter
 
     always @(posedge clk or negedge rst_n) begin
         if(~rst_n) begin
-            {ages[3], ranks[3]} <= {2'b00, 18'b0};
+            {ages[3], ranks[3]} <= {2'b00, 19'b0};
         end else if(clear) begin
-            {ages[3], ranks[3]} <= {2'b00, 18'b0};
+            {ages[3], ranks[3]} <= {2'b00, 19'b0};
         end else if(~en) begin
         end else if(comp_i == 3) begin
             {ages[3], ranks[3]} <= {time_stamp, accumulation};

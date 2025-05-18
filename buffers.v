@@ -11,18 +11,17 @@ module buffers(
     input [11:0] velocity_cnt,
 
     input [5:0] detection_flat,
-    input [6*18-1:0] energy_sqrt_flat,
+    input [6*19-1:0] energy_sqrt_flat,
 
     output reg target_vld,
     output reg [11:0] target_range,
     output reg [11:0] target_velocity,
-    output reg [17:0] target_energy,
-    // output reg [17:0] target_noise,
+    output reg [18:0] target_energy,
     output reg [15:0] target_cnt
 );
 
 reg [5:0] target_select;
-reg [17:0] target_energy_sqrt_flat [6:0];
+reg [18:0] target_energy_sqrt_flat [6:0];
 reg [5:0] mask;
 wire [5:0] target_select_masked = target_select & mask;
 
@@ -65,12 +64,12 @@ always @(posedge clk or negedge rst_n) begin
         target_energy_sqrt_flat[5] <= 0;
         target_energy_sqrt_flat[6] <= 0;
     end else if(en) begin
-        target_energy_sqrt_flat[0] <= energy_sqrt_flat[17:0];
-        target_energy_sqrt_flat[1] <= energy_sqrt_flat[35:18];
-        target_energy_sqrt_flat[2] <= energy_sqrt_flat[53:36];
-        target_energy_sqrt_flat[3] <= energy_sqrt_flat[71:54];
-        target_energy_sqrt_flat[4] <= energy_sqrt_flat[89:72];
-        target_energy_sqrt_flat[5] <= energy_sqrt_flat[107:90];
+        target_energy_sqrt_flat[0] <= energy_sqrt_flat[18:0];
+        target_energy_sqrt_flat[1] <= energy_sqrt_flat[37:19];
+        target_energy_sqrt_flat[2] <= energy_sqrt_flat[56:38];
+        target_energy_sqrt_flat[3] <= energy_sqrt_flat[75:57];
+        target_energy_sqrt_flat[4] <= energy_sqrt_flat[94:76];
+        target_energy_sqrt_flat[5] <= energy_sqrt_flat[113:95];
     end
 end
 
@@ -91,10 +90,10 @@ end
 reg [2:0] target_index_buf;
 reg [11:0] target_range_buf;
 reg [11:0] target_velocity_buf;
-reg [17:0] target_energy_sqrt_buf;
+reg [18:0] target_energy_sqrt_buf;
 
 wire [13:0] energy_man = {target_energy_sqrt_buf[13:0] * target_energy_sqrt_buf[13:0]};
-wire [4:0] energy_exp = target_energy_sqrt_buf[17:14] << 1;
+wire [5:0] energy_exp = {1'b0, target_energy_sqrt_buf[18:14]} << 1;
 
 always @(posedge clk or negedge rst_n) begin
     if(~rst_n) begin
@@ -120,7 +119,7 @@ always @(posedge clk or negedge rst_n) begin
         target_vld <= target_velocity_buf > velocity + 2 ? 0 : target_index_buf != 6;
         target_range <= target_range_buf > range ? target_range_buf - range : target_range_buf;
         target_velocity <= target_velocity_buf > velocity ? target_velocity_buf - velocity : target_velocity_buf;
-        target_energy <= {18{energy_exp[4]}} | {energy_exp, energy_man};
+        target_energy <= {19{energy_exp[5]}} | {energy_exp, energy_man};
     end
 end
 

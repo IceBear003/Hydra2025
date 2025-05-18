@@ -1,21 +1,20 @@
-module uuu_fp18_acc (
+module uuu_fp19_add (
     input clk,
     input rst_n,
 
-    input clear,
     input en,
 
-    input [17:0] a,
-    input [17:0] b,
-    output reg [17:0] sum
+    input [18:0] a,
+    input [18:0] b,
+    output reg [18:0] sum
 );
 
 //比较并确定预移位的位数
 
-wire comp = a[17:14] > b[17:14];
+wire comp = a[18:14] > b[18:14];
 
 reg [13:0] max_man;
-reg [3:0] max_exp;
+reg [4:0] max_exp;
 
 always @(*) begin
     if(comp) begin
@@ -26,16 +25,17 @@ always @(*) begin
 end
 
 reg [13:0] preshift_num;
-reg [3:0] preshift_bit;
+reg [4:0] preshift_bit;
 
 always @(*) begin
     if(comp) begin
         preshift_num = b[13:0];
-        preshift_bit = a[17:14] - b[17:14];
+        preshift_bit = a[18:14] - b[18:14];
     end else begin
         preshift_num = a[13:0];
-        preshift_bit = b[17:14] - a[17:14];
+        preshift_bit = b[18:14] - a[18:14];
     end
+    preshift_bit = preshift_bit[4] ? 5'b01111 : preshift_bit;
 end
 
 //预移位树，共四层每层14个MUX2，可以实现0~15位的右移操作
@@ -70,18 +70,18 @@ generate for(preshift_i4 = 0; preshift_i4 < 14; preshift_i4 = preshift_i4 + 1) b
 end endgenerate
 
 wire [13:0] min_man = preshift_num_l4;
+
 wire [14:0] sum_man = min_man + max_man;
-wire [3:0] max_exp_plus = max_exp + 1'b1;
+wire [4:0] sum_exp = {4'b000, sum_man[14]} + max_exp;
 
 always @(posedge clk or negedge rst_n) begin
     if(~rst_n) begin
-        sum <= 18'b0;
+        sum <= 19'b0;
+    end else if(~en) begin
+    end else if(sum_man[14]) begin              //后移位
+        sum <= {sum_exp, sum_man[14:1]};
     end else begin
-        case({en, clear})
-            2'b01: sum <= 18'b0;
-            2'b10: sum <= sum_man[14] ? {max_exp_plus, sum_man[14:1]} : {max_exp, sum_man[13:0]};    //后移位
-            2'b11: sum <= b;
-        endcase
+        sum <= {sum_exp, sum_man[13:0]};
     end
 end
 
