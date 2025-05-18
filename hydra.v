@@ -144,7 +144,7 @@ cfar_detectors cfar_detectors(
     .energy_sqrt_flat(energy_sqrt_flat)
 );
 
-buffer buffer(
+buffers buffers(
     .clk(clk),
     .rst_n(rst_n),
     .clear(buffer_clear),

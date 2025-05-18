@@ -1,4 +1,4 @@
-module buffer(
+module buffers(
     input clk,
     input rst_n,
 
