@@ -88,7 +88,7 @@ always @(*) begin
     endcase
 end
 
-reg target_index_buf;
+reg [2:0] target_index_buf;
 reg [11:0] target_range_buf;
 reg [11:0] target_velocity_buf;
 reg [17:0] target_energy_sqrt_buf;
@@ -98,7 +98,7 @@ wire [4:0] energy_exp = target_energy_sqrt_buf[17:14] << 1;
 
 always @(posedge clk) begin
     if(~rst_n) begin
-        target_index_buf <= 0;
+        target_index_buf <= 6;
         target_range_buf <= 0;
         target_velocity_buf <= 0;
         target_energy_sqrt_buf <= 0;

@@ -21,13 +21,13 @@ genvar i;
 generate for(i = 0; i < 9; i = i + 1) begin : Estimator
     wire [31:0] number = number_flat[i*32+31:i*32];
 
-    wire [13:0] im = number[27:14];
-    wire [13:0] re = number[13:0];
+    wire [13:0] im = number[31:18];
+    wire [13:0] re = number[17:4];
 
-    wire [13:0] im_abs = im[12:0] ^ {13{im[13]}} + im[13];
-    wire [13:0] re_abs = re[12:0] ^ {13{re[13]}} + re[13];
+    wire [13:0] im_abs = im[13] ? (~im + 1'b1) : im;
+    wire [13:0] re_abs = re[13] ? (~re + 1'b1) : re;
 
-    wire [3:0] exp = {~number[31], number[30:28]};            //补码转移码，最高位取反
+    wire [3:0] exp = {~number[3], number[2:0]};            //补码转移码，最高位取反
     wire [13:0] max = (im_abs > re_abs) ? im_abs : re_abs;
     wire [13:0] min = (im_abs > re_abs) ? re_abs : im_abs;
 

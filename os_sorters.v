@@ -21,17 +21,20 @@ reg clear;
 wire en_internal = range_cnt > range;
 wire en = en_internal || en_external;
 assign next_clear = clear;
+reg [2:0] velocity_cnt_inc;
 
 always @(posedge clk) begin
     if(~rst_n) begin
         range_cnt <= 0;
         velocity_cnt <= 0;
+        velocity_cnt_inc <= 3'b111;
     end else if(~en) begin
     end else if(range_cnt != range + 3) begin
         range_cnt <= range_cnt + 1;
     end else begin
         range_cnt <= 0;
-        velocity_cnt <= velocity_cnt + 1;
+        velocity_cnt <= velocity_cnt + velocity_cnt_inc;
+        velocity_cnt_inc[1] <= ~velocity_cnt_inc[1];
     end
 end
 
@@ -63,19 +66,15 @@ always @(posedge clk) begin
     end
 end
 
-reg [1:0] old_time_stamp;
-reg [1:0] new_time_stamp;
+reg [1:0] time_stamp;
 
 always @(posedge clk) begin
-    if(rst_n) begin
-        new_time_stamp <= 0;
-        old_time_stamp <= 1;
+    if(~rst_n) begin
+        time_stamp <= 0;
     end else if(clear) begin
-        new_time_stamp <= 0;
-        old_time_stamp <= 1;
+        time_stamp <= 0;
     end else if(en) begin
-        new_time_stamp <= new_time_stamp + 1;
-        old_time_stamp <= old_time_stamp + 1;
+        time_stamp <= time_stamp + 1;
     end
 end
 
@@ -92,8 +91,9 @@ generate for(i = 0; i < 6; i = i + 1) begin: Sorter
     reg [17:0] ranks [3:0];
     reg [1:0] ages [3:0];
 
-    wire accumulation = en_internal ? accumulation_storage_3[i*18+17:i*18] : accumulation_flat[i*18+17:i*18];
-    assign rank_3_flat[i*18+17:i*18] = ranks[2];
+    wire [17:0] accumulation = en_internal ? accumulation_storage_3[i*18+17:i*18] : accumulation_flat[i*18+17:i*18];
+    wire [17:0] rank_3 = ranks[2];
+    assign rank_3_flat[i*18+17:i*18] = rank_3;
 
     wire [3:0] comps;
     reg [2:0] comp_i;
@@ -115,10 +115,10 @@ generate for(i = 0; i < 6; i = i + 1) begin: Sorter
     wire [3:0] decay;
     reg [2:0] decay_i;
 
-    assign decay[0] = ages[0] == old_time_stamp;
-    assign decay[1] = ages[0] == old_time_stamp;
-    assign decay[2] = ages[0] == old_time_stamp;
-    assign decay[3] = ages[0] == old_time_stamp;
+    assign decay[0] = ages[0] == time_stamp;
+    assign decay[1] = ages[1] == time_stamp;
+    assign decay[2] = ages[2] == time_stamp;
+    assign decay[3] = ages[3] == time_stamp;
 
     always @(*) begin
         case (decay)
@@ -136,7 +136,7 @@ generate for(i = 0; i < 6; i = i + 1) begin: Sorter
             {ages[0], ranks[0]} <= {2'b00, 18'b0};
         end else if(~en) begin
         end else if(comp_i == 0) begin
-            {ages[0], ranks[0]} <= {new_time_stamp, accumulation};
+            {ages[0], ranks[0]} <= {time_stamp, accumulation};
         end else if(decay_i == 0 && comp_i > 0) begin
             {ages[0], ranks[0]} <= {ages[1], ranks[1]};
         end
@@ -149,7 +149,7 @@ generate for(i = 0; i < 6; i = i + 1) begin: Sorter
             {ages[1], ranks[1]} <= {2'b00, 18'b0};
         end else if(~en) begin
         end else if(comp_i == 1) begin
-            {ages[1], ranks[1]} <= {new_time_stamp, accumulation};
+            {ages[1], ranks[1]} <= {time_stamp, accumulation};
         end else if(decay_i <= 1 && comp_i > 1) begin
             {ages[1], ranks[1]} <= {ages[2], ranks[2]};
         end else if(comp_i < 1 && decay_i >= 1) begin
@@ -164,7 +164,7 @@ generate for(i = 0; i < 6; i = i + 1) begin: Sorter
             {ages[2], ranks[2]} <= {2'b00, 18'b0};
         end else if(~en) begin
         end else if(comp_i == 2) begin
-            {ages[2], ranks[2]} <= {new_time_stamp, accumulation};
+            {ages[2], ranks[2]} <= {time_stamp, accumulation};
         end else if(decay_i <= 2 && comp_i > 2) begin
             {ages[2], ranks[2]} <= {ages[3], ranks[3]};
         end else if(comp_i < 2 && decay_i >= 2) begin
@@ -179,7 +179,7 @@ generate for(i = 0; i < 6; i = i + 1) begin: Sorter
             {ages[3], ranks[3]} <= {2'b00, 18'b0};
         end else if(~en) begin
         end else if(comp_i == 3) begin
-            {ages[3], ranks[3]} <= {new_time_stamp, accumulation};
+            {ages[3], ranks[3]} <= {time_stamp, accumulation};
         end else if(comp_i < 3 && decay_i == 3) begin
             {ages[3], ranks[3]} <= {ages[2], ranks[2]};
         end
