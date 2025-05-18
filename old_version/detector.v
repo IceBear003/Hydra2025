@@ -18,7 +18,7 @@ ufp18_comp ufp18_comp(
     .comp(comp)
 );
 
-always @(posedge clk) begin
+always @(posedge clk or negedge rst_n) begin
     if(~rst_n) begin
         object_detected <= 0;
     end else if(~enable) begin

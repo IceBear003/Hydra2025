@@ -13,7 +13,7 @@ module ca_summers(
     output [3*18-1:0] summation_flat
 );
 
-always @(posedge clk) begin
+always @(posedge clk or negedge rst_n) begin
     if(~rst_n) begin
         next_clear <= 0;
         next_en <= 0;

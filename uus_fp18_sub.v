@@ -136,7 +136,7 @@ generate for(postshift_i4 = 0; postshift_i4 < 14; postshift_i4 = postshift_i4 + 
     assign postshift_num_l4[postshift_i4] = postshift_bit[3] ? right_bit : postshift_num_l3[postshift_i4];
 end endgenerate
 
-always @(posedge clk) begin
+always @(posedge clk or negedge rst_n) begin
     if(~rst_n) begin
         diff <= 19'b0;
     end else if(en) begin

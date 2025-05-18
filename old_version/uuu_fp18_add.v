@@ -11,7 +11,7 @@ module uuu_fp18_add ( //unsigned + unsigned = unsigned
 //两周期完成，需要一个打一拍的门控信号
 
 reg enable_d;
-always @(posedge clk) begin
+always @(posedge clk or negedge rst_n) begin
     if(~rst_n) begin
         enable_d <= 0;
     end else begin
@@ -26,7 +26,7 @@ wire comp = a[17:14] > b[17:14];
 reg [13:0] max_man;
 reg [3:0] max_exp;
 
-always @(posedge clk) begin
+always @(posedge clk or negedge rst_n) begin
     if(~rst_n) begin
         {max_exp, max_man} <= 0;
     end else if(comp) begin
@@ -81,7 +81,7 @@ generate for(preshift_i4 = 0; preshift_i4 < 14; preshift_i4 = preshift_i4 + 1) b
 end endgenerate
 
 reg [13:0] min_man;
-always @(posedge clk) begin
+always @(posedge clk or negedge rst_n) begin
     if(~rst_n) begin
         min_man <= 14'b0;
     end else if(enable) begin

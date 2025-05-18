@@ -19,7 +19,7 @@ reg en_d2;
 reg clear_d1;
 reg clear_d2;
 
-always @(posedge clk) begin
+always @(posedge clk or negedge rst_n) begin
     if(~rst_n) begin
         en_d1 <= 0;
         en_d2 <= 0;
@@ -69,7 +69,7 @@ genvar i3;
 generate for(i3 = 0; i3 < 3; i3 = i3 + 1) begin: Stage_3_Subtracter
     reg [17:0] old_sum;
     
-    always @(posedge clk) begin
+    always @(posedge clk or negedge rst_n) begin
         if(~rst_n) begin
             old_sum <= 18'b0;
         end else if(en_d2) begin

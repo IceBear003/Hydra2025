@@ -21,7 +21,7 @@ wire new_frame = command == 2'b10;
 wire new_data = command == 2'b11;
 reg [2:0] state;
 
-always @(posedge clk) begin
+always @(posedge clk or negedge rst_n) begin
     if(~rst_n) begin
         state <= 0;
     end else if(configuring) begin
@@ -34,7 +34,7 @@ reg [11:0] velocity;
 reg [2:0] tx;
 reg [2:0] rx;
 
-always @(posedge clk) begin
+always @(posedge clk or negedge rst_n) begin
     if(~rst_n) begin
         range <= 0;
         velocity <= 0;
@@ -55,7 +55,7 @@ end
 reg [2:0] tx_cnt;
 reg [2:0] rx_cnt;
 
-always @(posedge clk) begin
+always @(posedge clk or negedge rst_n) begin
     if(~rst_n) begin
         tx_cnt <= 0;
         rx_cnt <= 0;
@@ -79,7 +79,7 @@ reg [11:0] velocity_cnt;
 assign r = range_cnt;
 assign v = velocity_cnt;
 
-always @(posedge clk) begin
+always @(posedge clk or negedge rst_n) begin
     if(~rst_n) begin
         range_cnt <= 1;
         velocity_cnt <= 3;
@@ -101,7 +101,7 @@ assign magnitude_estimator_ctrl = new_data;
 //非相干累加需要延迟模长计算一周期，以下为打拍逻辑
 reg accumulator_reset;
 
-always @(posedge clk) begin
+always @(posedge clk or negedge rst_n) begin
     if(~rst_n) begin
         accumulator_reset <= 0;
     end else begin
@@ -109,7 +109,7 @@ always @(posedge clk) begin
     end 
 end
 
-always @(posedge clk) begin
+always @(posedge clk or negedge rst_n) begin
     if(~rst_n) begin
         accumulator_ctrl <= 2'b00;
     end else if(accumulator_reset) begin
@@ -119,7 +119,7 @@ always @(posedge clk) begin
     end
 end
 
-always @(posedge clk) begin
+always @(posedge clk or negedge rst_n) begin
     if(~rst_n) begin
         osca_ctrl <= 2'b00;
     end else if(range_cnt == range && osca_ctrl == 2'b11) begin

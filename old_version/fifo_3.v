@@ -11,7 +11,7 @@ module storage(
 
 reg [17:0] data [2:0];
 
-always @(posedge clk) begin
+always @(posedge clk or negedge rst_n) begin
     if(~rst_n) begin
         data[0] <= 0;
         data[1] <= 0;

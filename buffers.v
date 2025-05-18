@@ -26,7 +26,7 @@ reg [17:0] target_energy_sqrt_flat [6:0];
 reg [5:0] mask;
 wire [5:0] target_select_masked = target_select & mask;
 
-always @(posedge clk) begin
+always @(posedge clk or negedge rst_n) begin
     if(~rst_n) begin
         target_select <= 0;
     end else if(clear) begin
@@ -38,7 +38,7 @@ always @(posedge clk) begin
     end
 end
 
-always @(posedge clk) begin
+always @(posedge clk or negedge rst_n) begin
     if(~rst_n) begin
         mask <= 6'b111111;
     end else if(clear || en) begin
@@ -55,7 +55,7 @@ always @(posedge clk) begin
     end
 end
 
-always @(posedge clk) begin
+always @(posedge clk or negedge rst_n) begin
     if(~rst_n) begin
         target_energy_sqrt_flat[0] <= 0;
         target_energy_sqrt_flat[1] <= 0;
@@ -96,7 +96,7 @@ reg [17:0] target_energy_sqrt_buf;
 wire [13:0] energy_man = {target_energy_sqrt_buf[13:0] * target_energy_sqrt_buf[13:0]};
 wire [4:0] energy_exp = target_energy_sqrt_buf[17:14] << 1;
 
-always @(posedge clk) begin
+always @(posedge clk or negedge rst_n) begin
     if(~rst_n) begin
         target_index_buf <= 6;
         target_range_buf <= 0;
@@ -110,7 +110,7 @@ always @(posedge clk) begin
     end
 end
 
-always @(posedge clk) begin
+always @(posedge clk or negedge rst_n) begin
     if(~rst_n) begin
         target_vld <= 0;
         target_range <= 0;
@@ -124,7 +124,7 @@ always @(posedge clk) begin
     end
 end
 
-always @(posedge clk) begin
+always @(posedge clk or negedge rst_n) begin
     if(~rst_n) begin
         target_cnt <= 0;
     end else if(clear) begin

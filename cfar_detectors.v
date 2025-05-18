@@ -21,7 +21,7 @@ module cfar_detectors(
 wire en_internal = range_cnt > (3 + capacity_choice);
 wire en = en_external && en_internal;
 
-always @(posedge clk) begin
+always @(posedge clk or negedge rst_n) begin
     if(~rst_n) begin
         next_clear <= 0;
         next_en <= 0;
@@ -43,7 +43,7 @@ wire [5:0] comp = {
     accumulation_flat[17:0] > accumulation_flat_queue[3][17:0]
 };
 
-always @(posedge clk) begin
+always @(posedge clk or negedge rst_n) begin
     if(~rst_n) begin
         accumulation_flat_queue[0] <= 0;
         accumulation_flat_queue[1] <= 0;
@@ -83,7 +83,7 @@ generate for(i = 0; i < 3; i = i + 1) begin: Detector
     wire [13:0] threshold_man = summation[13:0];
     wire [18:0] threshold = {threshold_exp, threshold_man};
 
-    always @(posedge clk) begin
+    always @(posedge clk or negedge rst_n) begin
         if(~rst_n) begin
             detection_result_0 <= 0;
             detection_result_1 <= 0;
@@ -98,7 +98,7 @@ generate for(i = 0; i < 3; i = i + 1) begin: Detector
     assign energy_sqrt_flat[36*i+17:36*i+0] = energy_sqrt_0;
     assign energy_sqrt_flat[36*i+35:36*i+18] = energy_sqrt_1;
 
-    always @(posedge clk) begin
+    always @(posedge clk or negedge rst_n) begin
         if(~rst_n) begin
             energy_sqrt_0 <= 0;
             energy_sqrt_1 <= 0;

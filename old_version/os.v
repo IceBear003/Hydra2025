@@ -54,7 +54,7 @@ generate for(i = 0; i < 4; i = i + 1) begin: heap_regs
     assign comp[i] = heap[i] <= number;
     assign old[i] = &(age[i] | new_age);
 
-    always @(posedge clk) begin
+    always @(posedge clk or negedge rst_n) begin
         if(~rst_n) begin
             {age[i], regs[i]} <= 0;
         end else if(~enable) begin

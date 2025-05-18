@@ -16,7 +16,7 @@ module magnitude_accumulators(
 reg [2:0] rx_cnt;
 reg [2:0] tx_cnt;
 
-always @(posedge clk) begin 
+always @(posedge clk or negedge rst_n) begin 
     if(~rst_n) begin
         rx_cnt <= 0;
         tx_cnt <= 0;
@@ -32,7 +32,7 @@ always @(posedge clk) begin
     end
 end
 
-always @(posedge clk) begin
+always @(posedge clk or negedge rst_n) begin
     if(~rst_n) begin
         next_en <= 0;
     end else begin

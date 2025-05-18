@@ -9,7 +9,7 @@ module magnitude_estimators(
     output [9*18-1:0] magnitude_flat
 );
 
-always @(posedge clk) begin
+always @(posedge clk or negedge rst_n) begin
     if(~rst_n) begin
         next_en <= 0;
     end else begin
@@ -37,7 +37,7 @@ generate for(i = 0; i < 9; i = i + 1) begin : Estimator
     assign magnitude_flat[i*18+17:i*18] = magnitude;
     wire [3:0] exp_minus = exp - 1'b1;
 
-    always @(posedge clk) begin
+    always @(posedge clk or negedge rst_n) begin
         if(~rst_n) begin
             magnitude <= 0;
         end else if(~en) begin

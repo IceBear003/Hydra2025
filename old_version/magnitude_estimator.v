@@ -18,7 +18,7 @@ wire [12:0] min = im_abs > re_abs ? re_abs : im_abs;
 
 wire [13:0] sum = max + min[12:2];
 
-always @(posedge clk) begin
+always @(posedge clk or negedge rst_n) begin
     if(~rst_n) begin
         magnitude <= 18'b0;
     end else begin

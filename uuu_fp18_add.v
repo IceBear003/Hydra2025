@@ -73,7 +73,7 @@ wire [13:0] min_man = preshift_num_l4;
 wire [14:0] sum_man = min_man + max_man;
 wire [3:0] sum_exp = {3'b000, sum_man[14]} + max_exp;
 
-always @(posedge clk) begin
+always @(posedge clk or negedge rst_n) begin
     if(~rst_n) begin
         sum <= 18'b0;
     end else if(~en) begin

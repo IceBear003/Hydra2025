@@ -23,7 +23,7 @@ wire en = en_internal || en_external;
 assign next_clear = clear;
 reg [2:0] velocity_cnt_inc;
 
-always @(posedge clk) begin
+always @(posedge clk or negedge rst_n) begin
     if(~rst_n) begin
         range_cnt <= 0;
         velocity_cnt <= 0;
@@ -38,7 +38,7 @@ always @(posedge clk) begin
     end
 end
 
-always @(posedge clk) begin
+always @(posedge clk or negedge rst_n) begin
     if(~rst_n) begin
         clear <= 0;
     end else begin
@@ -50,7 +50,7 @@ reg [6*18-1:0] accumulation_storage_1;
 reg [6*18-1:0] accumulation_storage_2;
 reg [6*18-1:0] accumulation_storage_3;
 
-always @(posedge clk) begin
+always @(posedge clk or negedge rst_n) begin
     if(~rst_n) begin
         accumulation_storage_1 <= 0;
         accumulation_storage_2 <= 0;
@@ -68,7 +68,7 @@ end
 
 reg [1:0] time_stamp;
 
-always @(posedge clk) begin
+always @(posedge clk or negedge rst_n) begin
     if(~rst_n) begin
         time_stamp <= 0;
     end else if(clear) begin
@@ -78,7 +78,7 @@ always @(posedge clk) begin
     end
 end
 
-always @(posedge clk) begin
+always @(posedge clk or negedge rst_n) begin
     if(~rst_n) begin
         next_en <= 0;
     end else begin
@@ -129,7 +129,7 @@ generate for(i = 0; i < 6; i = i + 1) begin: Sorter
         endcase
     end
 
-    always @(posedge clk) begin
+    always @(posedge clk or negedge rst_n) begin
         if(~rst_n) begin
             {ages[0], ranks[0]} <= {2'b00, 18'b0};
         end else if(clear) begin
@@ -142,7 +142,7 @@ generate for(i = 0; i < 6; i = i + 1) begin: Sorter
         end
     end
 
-    always @(posedge clk) begin
+    always @(posedge clk or negedge rst_n) begin
         if(~rst_n) begin
             {ages[1], ranks[1]} <= {2'b00, 18'b0};
         end else if(clear) begin
@@ -157,7 +157,7 @@ generate for(i = 0; i < 6; i = i + 1) begin: Sorter
         end
     end
 
-    always @(posedge clk) begin
+    always @(posedge clk or negedge rst_n) begin
         if(~rst_n) begin
             {ages[2], ranks[2]} <= {2'b00, 18'b0};
         end else if(clear) begin
@@ -172,7 +172,7 @@ generate for(i = 0; i < 6; i = i + 1) begin: Sorter
         end
     end
 
-    always @(posedge clk) begin
+    always @(posedge clk or negedge rst_n) begin
         if(~rst_n) begin
             {ages[3], ranks[3]} <= {2'b00, 18'b0};
         end else if(clear) begin

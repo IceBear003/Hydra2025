@@ -19,7 +19,7 @@ module conf(
 wire configuring = command == 2'b01;
 reg [2:0] state;
 
-always @(posedge clk) begin
+always @(posedge clk or negedge rst_n) begin
     if(~rst_n) begin
         state <= 0;
     end else if(configuring) begin
@@ -29,7 +29,7 @@ always @(posedge clk) begin
     end
 end
 
-always @(posedge clk) begin
+always @(posedge clk or negedge rst_n) begin
     if(~rst_n) begin
         range <= 0;
         velocity <= 0;

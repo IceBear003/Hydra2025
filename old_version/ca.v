@@ -17,12 +17,12 @@ reg [WIDTH-1:0] ca_result_old;
 reg enable_1d;
 reg enable_2d;
 
-always @(posedge clk) begin
+always @(posedge clk or negedge rst_n) begin
     enable_1d <= enable;
     enable_2d <= enable_1d;
 end
 
-always @(posedge clk) begin
+always @(posedge clk or negedge rst_n) begin
     if(~rst_n) begin
         os_result_old <= 0;
     end else if(enable) begin
@@ -30,7 +30,7 @@ always @(posedge clk) begin
     end
 end
 
-always @(posedge clk) begin
+always @(posedge clk or negedge rst_n) begin
     if(~rst_n) begin
         os_result_diff <= 0;
     end else if(enable) begin
@@ -38,7 +38,7 @@ always @(posedge clk) begin
     end
 end
 
-always @(posedge clk) begin
+always @(posedge clk or negedge rst_n) begin
     if(~rst_n) begin
         ca_result_old <= 0;
     end else if(enable_2d) begin
