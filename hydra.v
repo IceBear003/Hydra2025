@@ -78,6 +78,36 @@ wire [6*19-1:0] rank_3_flat;
 
 wire [11:0] range_cnt;
 wire [11:0] velocity_cnt;
+reg [11:0] range_cnt_d1;
+reg [11:0] range_cnt_d2;
+reg [11:0] range_cnt_d3;
+reg [11:0] range_cnt_d4;
+reg [11:0] velocity_cnt_d1;
+reg [11:0] velocity_cnt_d2;
+reg [11:0] velocity_cnt_d3;
+reg [11:0] velocity_cnt_d4;
+
+always @(posedge clk or negedge rst_n) begin
+    if(~rst_n) begin
+        range_cnt_d1 <= 0;
+        range_cnt_d2 <= 0;
+        range_cnt_d3 <= 0;
+        range_cnt_d4 <= 0;
+        velocity_cnt_d1 <= 0;
+        velocity_cnt_d2 <= 0;
+        velocity_cnt_d3 <= 0;
+        velocity_cnt_d4 <= 0;
+    end else begin
+        range_cnt_d1 <= range_cnt;
+        range_cnt_d2 <= range_cnt_d1;
+        range_cnt_d3 <= range_cnt_d2;
+        range_cnt_d4 <= range_cnt_d3;
+        velocity_cnt_d1 <= velocity_cnt;
+        velocity_cnt_d2 <= velocity_cnt_d1;
+        velocity_cnt_d3 <= velocity_cnt_d2;
+        velocity_cnt_d4 <= velocity_cnt_d3;
+    end
+end
 
 os_sorters os_sorters(
     .clk(clk),
@@ -110,7 +140,6 @@ ca_summers ca_summers(
 );
 
 wire buffer_en;
-wire buffer_clear;  //TODO山区
 wire [5:0] detection_flat;
 wire [6*19-1:0] energy_flat;
 wire [3*19-1:0] noise_flat;
@@ -120,11 +149,10 @@ cfar_detectors cfar_detectors(
     .rst_n(rst_n),
     .clear(cfar_detectors_clear),
     .en_external(cfar_detectors_en),
-    .range_cnt(range_cnt),
+    .range_cnt(range_cnt_d3),
     .os_sorters_en(os_sorters_en),
     .summation_flat(summation_flat),
     .accumulation_flat(accumulation_flat_dt),
-    .next_clear(buffer_clear),
     .next_en(buffer_en),
     .detection_flat(detection_flat),
     .energy_flat(energy_flat),
@@ -138,8 +166,8 @@ buffers buffers(
     .en(buffer_en),
     .range(range),
     .velocity(velocity),
-    .range_cnt(range_cnt),
-    .velocity_cnt(velocity_cnt),
+    .range_cnt(range_cnt_d4),
+    .velocity_cnt(velocity_cnt_d4),
     .detection_flat(detection_flat),
     .energy_flat(energy_flat),
     .noise_flat(noise_flat),

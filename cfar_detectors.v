@@ -11,22 +11,19 @@ module cfar_detectors(
     input [3*19-1:0] summation_flat,
     input [6*19-1:0] accumulation_flat,
 
-    output reg next_clear,
     output reg next_en,
     output [5:0] detection_flat,
     output [6*19-1:0] energy_flat,
     output [3*19-1:0] noise_flat
 );
 
-wire en_internal = range_cnt > 3;
+wire en_internal = range_cnt >= 3;
 wire en = en_external && en_internal;
 
 always @(posedge clk or negedge rst_n) begin
     if(~rst_n) begin
-        next_clear <= 0;
         next_en <= 0;
     end else begin
-        next_clear <= clear;
         next_en <= en;
     end
 end

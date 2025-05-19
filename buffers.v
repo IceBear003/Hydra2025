@@ -119,7 +119,7 @@ always @(posedge clk or negedge rst_n) begin
     end else begin 
         target_index_buf <= index;
         target_range_buf <= range_cnt + 1;
-        target_velocity_buf <= velocity_cnt + index + 3;
+        target_velocity_buf <= velocity_cnt + index + 3;    //TODO 问题！
         target_energy_buf <= target_energies[index];
         target_noise_buf <= target_noises[index[2:1]];
     end
