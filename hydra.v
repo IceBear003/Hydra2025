@@ -51,11 +51,14 @@ magnitude_estimators magnitude_estimators(
 );
 
 wire os_sorters_en;
+wire window_type;
 wire [9*19-1:0] accumulation_flat;
 wire [6*19-1:0] accumulation_flat_os = {accumulation_flat[170:152], accumulation_flat[151:133], accumulation_flat[113:95], 
                                         accumulation_flat[75:57],   accumulation_flat[37:19],   accumulation_flat[18:0]};
-wire [6*19-1:0] accumulation_flat_dt = {accumulation_flat[151:133], accumulation_flat[132:114], accumulation_flat[113:95],
-                                        accumulation_flat[94:76],   accumulation_flat[75:57],   accumulation_flat[56:38]};
+wire [7*19-1:0] accumulation_flat_choose = {accumulation_flat[151:133], accumulation_flat[132:114], accumulation_flat[113:95],
+                                            accumulation_flat[94:76],   accumulation_flat[75:57],   accumulation_flat[56:38],
+                                            accumulation_flat[37:19]};
+wire [6*19-1:0] accumulation_flat_dt = window_type ? accumulation_flat_choose[7*19-1:19] : accumulation_flat_choose[6*19-1:0];
 
 magnitude_accumulators magnitude_accumulators(
     .clk(clk),
@@ -86,7 +89,8 @@ os_sorters os_sorters(
     .next_en(ca_summers_en),
     .rank_3_flat(rank_3_flat),
     .range_cnt(range_cnt),
-    .velocity_cnt(velocity_cnt)
+    .velocity_cnt(velocity_cnt),
+    .window_type(window_type)
 );
 
 wire cfar_detectors_clear;
@@ -105,7 +109,7 @@ ca_summers ca_summers(
 );
 
 wire buffer_en;
-wire buffer_clear;
+wire buffer_clear;  //TODO山区
 wire [5:0] detection_flat;
 wire [6*19-1:0] energy_sqrt_flat;
 
@@ -127,7 +131,7 @@ cfar_detectors cfar_detectors(
 buffers buffers(
     .clk(clk),
     .rst_n(rst_n),
-    .clear(buffer_clear),
+    .clear(command == 2'b10),
     .en(buffer_en),
     .range(range),
     .velocity(velocity),

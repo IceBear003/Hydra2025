@@ -14,7 +14,8 @@ module os_sorters(
     output [6*19-1:0] rank_3_flat,
 
     output reg [11:0] range_cnt,
-    output reg [11:0] velocity_cnt
+    output reg [11:0] velocity_cnt,
+    output window_type
 );
 
 reg clear;
@@ -22,6 +23,7 @@ wire en_internal = range_cnt > range;
 wire en = en_internal || en_external;
 assign next_clear = clear;
 reg [2:0] velocity_cnt_inc;
+assign window_type = velocity_cnt_inc[1];   //1-靠右 0-靠左
 
 always @(posedge clk or negedge rst_n) begin
     if(~rst_n) begin
@@ -66,7 +68,7 @@ always @(posedge clk or negedge rst_n) begin
     end
 end
 
-reg [1:0] time_stamp;
+reg [2:0] time_stamp;
 
 always @(posedge clk or negedge rst_n) begin
     if(~rst_n) begin
@@ -74,7 +76,7 @@ always @(posedge clk or negedge rst_n) begin
     end else if(clear) begin
         time_stamp <= 0;
     end else if(en) begin
-        time_stamp <= time_stamp + 1;
+        time_stamp <= time_stamp + 1 == 3'd4 ? 0 : time_stamp + 1;
     end
 end
 
@@ -89,7 +91,7 @@ end
 genvar i;
 generate for(i = 0; i < 6; i = i + 1) begin: Sorter
     reg [18:0] ranks [3:0];
-    reg [1:0] ages [3:0];
+    reg [2:0] ages [3:0];
 
     wire [18:0] accumulation = en_internal ? accumulation_storage_3[i*19+18:i*19] : accumulation_flat[i*19+18:i*19];
     wire [18:0] rank_3 = ranks[2];
@@ -108,12 +110,13 @@ generate for(i = 0; i < 6; i = i + 1) begin: Sorter
             4'b1111: comp_i = 0; 
             4'b1110: comp_i = 1; 
             4'b1100: comp_i = 2; 
-            default: comp_i = 3; 
+            4'b1000: comp_i = 3; 
+            default: comp_i = 4; 
         endcase
     end
 
     wire [3:0] decay;
-    reg [2:0] decay_i;
+    reg [3:0] decay_i;
 
     assign decay[0] = ages[0] == time_stamp;
     assign decay[1] = ages[1] == time_stamp;
@@ -125,63 +128,75 @@ generate for(i = 0; i < 6; i = i + 1) begin: Sorter
             4'b0001: decay_i = 0; 
             4'b0010: decay_i = 1; 
             4'b0100: decay_i = 2; 
-            default: decay_i = 3; 
+            4'b1000: decay_i = 2; 
+            default: decay_i = 4; 
         endcase
     end
 
     always @(posedge clk or negedge rst_n) begin
         if(~rst_n) begin
-            {ages[0], ranks[0]} <= {2'b00, 19'b0};
+            {ages[0], ranks[0]} <= {3'b100, 19'b0};
         end else if(clear) begin
-            {ages[0], ranks[0]} <= {2'b00, 19'b0};
+            {ages[0], ranks[0]} <= {3'b100, 19'b0};
         end else if(~en) begin
         end else if(comp_i == 0) begin
             {ages[0], ranks[0]} <= {time_stamp, accumulation};
-        end else if(decay_i == 0 && comp_i > 0) begin
-            {ages[0], ranks[0]} <= {ages[1], ranks[1]};
+        end else if(decay_i == 0) begin
+            {ages[0], ranks[0]} <= comp_i == 1 ? {time_stamp, accumulation} : {ages[1], ranks[1]};
         end
     end
 
     always @(posedge clk or negedge rst_n) begin
         if(~rst_n) begin
-            {ages[1], ranks[1]} <= {2'b00, 19'b0};
+            {ages[1], ranks[1]} <= {3'b100, 19'b0};
         end else if(clear) begin
-            {ages[1], ranks[1]} <= {2'b00, 19'b0};
+            {ages[1], ranks[1]} <= {3'b100, 19'b0};
         end else if(~en) begin
-        end else if(comp_i == 1) begin
-            {ages[1], ranks[1]} <= {time_stamp, accumulation};
-        end else if(decay_i <= 1 && comp_i > 1) begin
-            {ages[1], ranks[1]} <= {ages[2], ranks[2]};
-        end else if(comp_i < 1 && decay_i >= 1) begin
-            {ages[1], ranks[1]} <= {ages[0], ranks[0]};
+        end else if(decay_i == 1) begin
+            case (comp_i)
+                3'd0: {ages[1], ranks[1]} <= {ages[0], ranks[0]};
+                3'd1: {ages[1], ranks[1]} <= {time_stamp, accumulation};
+                3'd2: {ages[1], ranks[1]} <= {time_stamp, accumulation};
+                default: {ages[1], ranks[1]} <= {ages[2], ranks[2]};
+            endcase
+        end else if(decay_i < 1 && comp_i >= 2) begin
+            {ages[1], ranks[1]} <= comp_i == 2 ? {time_stamp, accumulation} : {ages[2], ranks[2]};
+        end else if(decay_i > 1 && comp_i <= 1) begin
+            {ages[1], ranks[1]} <= comp_i == 1 ? {time_stamp, accumulation} : {ages[0], ranks[0]};
         end
     end
 
     always @(posedge clk or negedge rst_n) begin
         if(~rst_n) begin
-            {ages[2], ranks[2]} <= {2'b00, 19'b0};
+            {ages[2], ranks[2]} <= {3'b100, 19'b0};
         end else if(clear) begin
-            {ages[2], ranks[2]} <= {2'b00, 19'b0};
+            {ages[2], ranks[2]} <= {3'b100, 19'b0};
         end else if(~en) begin
-        end else if(comp_i == 2) begin
-            {ages[2], ranks[2]} <= {time_stamp, accumulation};
-        end else if(decay_i <= 2 && comp_i > 2) begin
-            {ages[2], ranks[2]} <= {ages[3], ranks[3]};
-        end else if(comp_i < 2 && decay_i >= 2) begin
-            {ages[2], ranks[2]} <= {ages[1], ranks[1]};
+        end else if(decay_i == 2) begin
+            case (comp_i)
+                3'd0: {ages[2], ranks[2]} <= {ages[1], ranks[1]};
+                3'd1: {ages[2], ranks[2]} <= {ages[1], ranks[1]};
+                3'd2: {ages[2], ranks[2]} <= {time_stamp, accumulation};
+                3'd3: {ages[2], ranks[2]} <= {time_stamp, accumulation};
+                default: {ages[2], ranks[2]} <= {ages[3], ranks[3]};
+            endcase
+        end else if(decay_i < 2 && comp_i >= 3) begin
+            {ages[2], ranks[2]} <= comp_i == 3 ? {time_stamp, accumulation} : {ages[3], ranks[3]};
+        end else if(decay_i > 2 && comp_i <= 2) begin
+            {ages[2], ranks[2]} <= comp_i == 2 ? {time_stamp, accumulation} : {ages[1], ranks[1]};
         end
     end
 
     always @(posedge clk or negedge rst_n) begin
         if(~rst_n) begin
-            {ages[3], ranks[3]} <= {2'b00, 19'b0};
+            {ages[3], ranks[3]} <= {3'b100, 19'b0};
         end else if(clear) begin
-            {ages[3], ranks[3]} <= {2'b00, 19'b0};
+            {ages[3], ranks[3]} <= {3'b100, 19'b0};
         end else if(~en) begin
-        end else if(comp_i == 3) begin
+        end else if(comp_i == 4) begin
             {ages[3], ranks[3]} <= {time_stamp, accumulation};
-        end else if(comp_i < 3 && decay_i == 3) begin
-            {ages[3], ranks[3]} <= {ages[2], ranks[2]};
+        end else if(decay_i == 3) begin
+            {ages[3], ranks[3]} <= comp_i == 3 ? {time_stamp, accumulation} : {ages[2], ranks[2]};
         end
     end
 end endgenerate

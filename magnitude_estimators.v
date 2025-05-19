@@ -27,7 +27,7 @@ generate for(i = 0; i < 9; i = i + 1) begin : Estimator
     wire [13:0] im_abs = im[13] ? (~im + 1'b1) : im;
     wire [13:0] re_abs = re[13] ? (~re + 1'b1) : re;
 
-    wire [4:0] exp = {1'b0, ~number[3], number[2:0]};            //补码转移码，最高位取反
+    wire [4:0] exp = {1'b0, ~number[3], number[2:0]} + 1'b1;            //补码转移码，加一放置过小下溢
     wire [13:0] max = (im_abs > re_abs) ? im_abs : re_abs;
     wire [13:0] min = (im_abs > re_abs) ? re_abs : im_abs;
 
