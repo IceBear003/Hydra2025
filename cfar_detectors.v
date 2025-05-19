@@ -14,7 +14,8 @@ module cfar_detectors(
     output reg next_clear,
     output reg next_en,
     output [5:0] detection_flat,
-    output [6*19-1:0] energy_sqrt_flat
+    output [6*19-1:0] energy_flat,
+    output [3*19-1:0] noise_flat
 );
 
 wire en_internal = range_cnt > 3;
@@ -70,8 +71,8 @@ generate for(i = 0; i < 3; i = i + 1) begin: Detector
     assign detection_flat[2*i] = detection_result_0;
     assign detection_flat[2*i+1] = detection_result_1;
 
-    wire [18:0] magnitude_0 = magnitude_flat[i*38+37:i*36+19];
-    wire [18:0] magnitude_1 = magnitude_flat[i*38+18:i*36];
+    wire [18:0] magnitude_0 = magnitude_flat[i*38+18:i*38];
+    wire [18:0] magnitude_1 = magnitude_flat[i*38+37:i*38+19];
 
     wire [18:0] summation = summation_flat[i*19+18:i*19];
     wire [4:0] threshold_exp = summation[18:14] + 2;
@@ -88,18 +89,22 @@ generate for(i = 0; i < 3; i = i + 1) begin: Detector
         end
     end
 
-    reg [18:0] energy_sqrt_0;
-    reg [18:0] energy_sqrt_1;
-    assign energy_sqrt_flat[38*i+18:38*i] = energy_sqrt_0;
-    assign energy_sqrt_flat[38*i+37:38*i+19] = energy_sqrt_1;
+    reg [18:0] energy_0;
+    reg [18:0] energy_1;
+    reg [18:0] noise;
+    assign energy_flat[38*i+18:38*i] = energy_0;
+    assign energy_flat[38*i+37:38*i+19] = energy_1;
+    assign noise_flat[19*i+18:19*i] = noise;
 
     always @(posedge clk or negedge rst_n) begin
         if(~rst_n) begin
-            energy_sqrt_0 <= 0;
-            energy_sqrt_1 <= 0;
+            energy_0 <= 0;
+            energy_1 <= 0;
+            noise <= 0;
         end else if(en) begin
-            energy_sqrt_0 <= magnitude_0;
-            energy_sqrt_1 <= magnitude_1;
+            energy_0 <= magnitude_0;
+            energy_1 <= magnitude_1;
+            noise <= summation;
         end
     end
 end endgenerate

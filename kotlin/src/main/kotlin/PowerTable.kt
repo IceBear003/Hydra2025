@@ -1,9 +1,8 @@
 import java.io.File
 import java.util.*
-import kotlin.collections.List
 import kotlin.math.*
 
-fun main(args: Array<String>) {
+fun generatePowerTable(args: Array<String>) {
     val directory = File("D:\\大学\\大二下\\集创赛\\rawdata")
     for(i in 1..10) {
         val frame = File("$directory\\frame$i", "slow_time_bitdc_out.dv")

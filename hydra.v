@@ -19,6 +19,7 @@ module hydra(
     output [11:0] target_range,
     output [11:0] target_velocity,
     output [18:0] target_energy,
+    output [18:0] target_noise,
     output [15:0] target_cnt
 );
 
@@ -111,7 +112,8 @@ ca_summers ca_summers(
 wire buffer_en;
 wire buffer_clear;  //TODO山区
 wire [5:0] detection_flat;
-wire [6*19-1:0] energy_sqrt_flat;
+wire [6*19-1:0] energy_flat;
+wire [3*19-1:0] noise_flat;
 
 cfar_detectors cfar_detectors(
     .clk(clk),
@@ -125,7 +127,8 @@ cfar_detectors cfar_detectors(
     .next_clear(buffer_clear),
     .next_en(buffer_en),
     .detection_flat(detection_flat),
-    .energy_sqrt_flat(energy_sqrt_flat)
+    .energy_flat(energy_flat),
+    .noise_flat(noise_flat)
 );
 
 buffers buffers(
@@ -138,11 +141,13 @@ buffers buffers(
     .range_cnt(range_cnt),
     .velocity_cnt(velocity_cnt),
     .detection_flat(detection_flat),
-    .energy_sqrt_flat(energy_sqrt_flat),
+    .energy_flat(energy_flat),
+    .noise_flat(noise_flat),
     .target_vld(target_vld),
     .target_range(target_range),
     .target_velocity(target_velocity),
     .target_energy(target_energy),
+    .target_noise(target_noise),
     .target_cnt(target_cnt)
 );
 endmodule
