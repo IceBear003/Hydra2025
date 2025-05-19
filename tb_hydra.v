@@ -62,9 +62,9 @@ reg [2:0] rx = 3'd5;
 reg [2:0] tx = 3'd5;
 
 initial begin
-    f_in = $fopen("C:\\Users\\12942\\Desktop\\converted_data\\frame6\\slow_time_bitdc_out.txt", "r");
-    f_out = $fopen("C:\\Users\\12942\\Desktop\\converted_data\\frame6\\result.txt", "w");
-    $dumpfile("C:\\Users\\12942\\Desktop\\converted_data\\frame6\\tb_hydra.vcd");
+    f_in = $fopen("C:\\Users\\12942\\Desktop\\converted_data\\extra_frame_1\\radar_data_range128_velocity96_target512.txt", "r");
+    f_out = $fopen("C:\\Users\\12942\\Desktop\\converted_data\\extra_frame_1\\result.txt", "w");
+    $dumpfile("C:\\Users\\12942\\Desktop\\converted_data\\extra_frame_1\\tb_hydra.vcd");
     $dumpvars();
     rst_n = 0;
 #10 rst_n = 1;
