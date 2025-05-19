@@ -22,21 +22,21 @@ reg clear;
 wire en_internal = range_cnt > range;
 wire en = en_internal || en_external;
 assign next_clear = clear;
-reg [2:0] velocity_cnt_inc;
-assign window_type = velocity_cnt_inc[1];   //1-靠右 0-靠左
+reg velocity_cnt_inc;
+assign window_type = velocity_cnt_inc;   //1-靠右 0-靠左
 
 always @(posedge clk or negedge rst_n) begin
     if(~rst_n) begin
         range_cnt <= 0;
-        velocity_cnt <= 0;
-        velocity_cnt_inc <= 3'b111;
+        velocity_cnt <= 3;
+        velocity_cnt_inc <= 1'b1;
     end else if(~en) begin
     end else if(range_cnt != range + 3) begin
         range_cnt <= range_cnt + 1;
     end else begin
         range_cnt <= 0;
-        velocity_cnt <= velocity_cnt + velocity_cnt_inc;
-        velocity_cnt_inc[1] <= ~velocity_cnt_inc[1];
+        velocity_cnt <= velocity_cnt + 3'd6;
+        velocity_cnt_inc <= ~velocity_cnt_inc;
     end
 end
 

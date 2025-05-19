@@ -90,7 +90,7 @@ end
 always @(posedge clk) begin
     if(~rst_n) begin
     end else if(target_vld == 1) begin
-        $fdisplay(f_out, "Target#%d: (%d, %d) Power = %05h Noise = %05h\n", target_cnt, target_velocity, target_range, target_energy, target_noise);
+        $fdisplay(f_out, "Target%d Location = (%d, %d) Power = %05h Noise = %05h", target_cnt, target_velocity, target_range, target_energy, target_noise);
     end
 end
 endmodule

@@ -28,6 +28,19 @@ reg [18:0] target_noises [4:0];
 reg [5:0] mask;
 wire [5:0] target_select_masked = target_select & mask;
 
+reg [11:0] range_cnt_buf;
+reg [11:0] velocity_cnt_buf;
+
+always @(posedge clk or negedge rst_n) begin
+    if(~rst_n) begin
+        range_cnt_buf <= 0;
+        velocity_cnt_buf <= 0;
+    end else if(detection_flat != 0) begin
+        range_cnt_buf <= range_cnt;
+        velocity_cnt_buf <= velocity_cnt;
+    end
+end
+
 always @(posedge clk or negedge rst_n) begin
     if(~rst_n) begin
         target_select <= 0;
@@ -118,8 +131,8 @@ always @(posedge clk or negedge rst_n) begin
         target_noise_buf <= 0;
     end else begin 
         target_index_buf <= index;
-        target_range_buf <= range_cnt + 1;
-        target_velocity_buf <= velocity_cnt + index + 3;    //TODO 问题！
+        target_range_buf <= range_cnt_buf - 2;
+        target_velocity_buf <= velocity_cnt_buf + index;
         target_energy_buf <= target_energies[index];
         target_noise_buf <= target_noises[index[2:1]];
     end
@@ -133,9 +146,11 @@ always @(posedge clk or negedge rst_n) begin
         target_energy <= 0;
         target_noise <= 0;
     end else begin 
-        target_vld <= target_velocity_buf > velocity + 2 ? 0 : target_index_buf != 6;
-        target_range <= target_range_buf > range ? target_range_buf - range : target_range_buf;
-        target_velocity <= target_velocity_buf > velocity ? target_velocity_buf - velocity : target_velocity_buf;
+        target_vld <= target_velocity_buf <= velocity + 2 && 
+                      target_index_buf != 6 &&
+                      ~(target_velocity_buf == velocity + 1 && (target_range_buf > range || target_range_buf <= 4));
+        target_range <= target_range_buf > range ? target_range_buf - range - 1 : target_range_buf;
+        target_velocity <= target_velocity_buf > velocity ? target_velocity_buf - velocity - 1 : target_velocity_buf;
         target_energy <= target_energy_buf;
         target_noise <= target_noise_buf;
     end
