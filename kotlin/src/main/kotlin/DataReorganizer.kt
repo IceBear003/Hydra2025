@@ -16,7 +16,7 @@ fun dataReorganize(srcDirectory: File, destDirectory: File) {
 
     Files.walk(srcDirectory.toPath())?.filter { it.extension == "dv" }?.forEach { path ->
         val suffix = path.toFile().absolutePath.replace(srcDirectory.absolutePath, "")
-        val outputFile = File(destDirectory.absolutePath + suffix)
+        val outputFile = File(destDirectory.absolutePath + suffix.replace(".dv", ".txt"))
         outputFile.parentFile.mkdirs()
         outputFile.delete()
         outputFile.createNewFile()
@@ -40,14 +40,14 @@ fun dataReorganize(srcDirectory: File, destDirectory: File) {
         val rightWindow = listOf(-3, -1, 0, 1, 2, 3, 4, 5, 7)
         val leftWindow = listOf(-2, 0, 1, 2, 3, 4, 5, 6, 8)
         var whichWindow = true
-
+        var x= 0
         for(i in 3..<velocity step 6) {
             for(j in 0..<range) {
                 repeat(rx * tx) { channel ->
                     (if(whichWindow) rightWindow else leftWindow).forEach { offset ->
-                        val wrappedVelocity = if((i + offset) >= velocity) i + offset - velocity else i + offset
-//                        println("$i $j $offset")
-                        printer.print("${data[channel][j * velocity + wrappedVelocity]} ")
+                        val wrappedVelocity = if ((i + offset) >= velocity) i + offset - velocity else i + offset
+                        val bin = data[channel][j * velocity + wrappedVelocity]
+                        printer.printf("%s ", bin)
                     }
                     printer.println()
                 }
@@ -55,5 +55,6 @@ fun dataReorganize(srcDirectory: File, destDirectory: File) {
             whichWindow = !whichWindow
         }
         data.clear()
+        printer.close()
     }
 }
