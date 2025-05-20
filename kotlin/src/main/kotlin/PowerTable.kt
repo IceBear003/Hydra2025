@@ -2,17 +2,19 @@ import java.io.File
 import java.util.*
 import kotlin.math.*
 
-fun generatePowerTable(args: Array<String>) {
-    val directory = File("D:\\大学\\大二下\\集创赛\\rawdata")
-    for(i in 1..10) {
-        val frame = File("$directory\\frame$i", "slow_time_bitdc_out.dv")
+fun generatePowerTable() {
+    val directory = File("D:\\大学\\大二下\\集创赛\\Hydra2025\\kotlin\\src\\main\\resources\\raw")
+    for(i in 2..2) {
+        val frame = File(directory, "radar_data_channel36_range128_velocity96_target32.dv")
+//        val frame = File("$directory\\frame$i", "slow_time_bitdc_out.dv")
 
         val matrices = mutableListOf<MutableList<Double>>()
         val combined = mutableListOf<Double>()
 
 //        val theta = listOf(0.0, 0.5, 1.0, 0.5, 0.0, -0.5, -1.0, -0.5)
 //        theta.forEachIndexed { index, angleSin ->
-            val outputFile = File("$directory\\frame$i", "combined_origin.txt")
+            val outputFile = File(directory, "radar_data_channel36_range128_velocity96_target32.txt")
+//        val outputFile = File("$directory\\frame$i", "slow_time_bitdc_out.txt")
             val scanner = Scanner(frame)
             repeat(6 * 6) { channel ->
 //                val tx = channel / 6
@@ -32,11 +34,8 @@ fun generatePowerTable(args: Array<String>) {
 //                            return@repeat_96
                         val hex = scanner.nextLine()
                         val binary = hex.substring(2).hexToBinary().padStart(32, '0')
-                        var imPart = binary.substring(0, 14).binaryToSignedInt(14)
-                        var rePart = binary.substring(14, 28).binaryToSignedInt(14)
-
-                        imPart = (imPart * weightRe + rePart * weightIm).toInt()
-                        rePart = (rePart * weightRe - imPart * weightIm).toInt()
+                        val imPart = binary.substring(0, 14).binaryToSignedInt(14) * 1.0 / 2.0.pow(13.0)
+                        val rePart = binary.substring(14, 28).binaryToSignedInt(14) * 1.0 / 2.0.pow(13.0)
 
                         val expPart = binary.substring(28).binaryToSignedInt(4)
 
@@ -65,7 +64,7 @@ fun generatePowerTable(args: Array<String>) {
     }
 }
 
-fun getMag(im: Int, re: Int): Int = (abs(im) to abs(re)).let { (a, b) -> max(a, b) + min(a, b) / 4 }
+fun getMag(im: Double, re: Double): Double = (abs(im) to abs(re)).let { (a, b) -> max(a, b) + min(a, b) / 4 }
 
 fun String.hexToBinary() : String = Integer.toBinaryString(Integer.parseUnsignedInt(this, 16))
 
