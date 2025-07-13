@@ -1,0 +1,967 @@
+$date
+	Mon May 12 08:12:33 2025
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1ns
+$end
+$scope module tb_usu_fp18_add $end
+$var wire 18 ! sum [17:0] $end
+$var reg 18 " a [17:0] $end
+$var reg 19 # b [18:0] $end
+$var reg 1 $ clk $end
+$var reg 1 % enable $end
+$var reg 1 & rst_n $end
+$scope module inst $end
+$var wire 18 ' a [17:0] $end
+$var wire 19 ( b [18:0] $end
+$var wire 1 $ clk $end
+$var wire 1 % enable $end
+$var wire 1 & rst_n $end
+$var wire 16 ) sum_man [15:0] $end
+$var wire 14 * preshift_num_l4 [13:0] $end
+$var wire 14 + preshift_num_l3 [13:0] $end
+$var wire 14 , preshift_num_l2 [13:0] $end
+$var wire 14 - preshift_num_l1 [13:0] $end
+$var wire 15 . postshift_num_l4 [14:0] $end
+$var wire 15 / postshift_num_l3 [14:0] $end
+$var wire 15 0 postshift_num_l2 [14:0] $end
+$var wire 15 1 postshift_num_l1 [14:0] $end
+$var wire 15 2 postshift_num [14:0] $end
+$var wire 1 3 comp $end
+$var reg 1 4 enable_d $end
+$var reg 5 5 max_exp [4:0] $end
+$var reg 15 6 max_man [14:0] $end
+$var reg 15 7 min_man [14:0] $end
+$var reg 4 8 postshift_bit [3:0] $end
+$var reg 4 9 preshift_bit [3:0] $end
+$var reg 14 : preshift_num [13:0] $end
+$var reg 1 ; preshift_sign $end
+$var reg 18 < sum [17:0] $end
+$scope begin genblk1[0] $end
+$var wire 1 = left_bit $end
+$var parameter 2 > preshift_i1 $end
+$upscope $end
+$scope begin genblk1[1] $end
+$var wire 1 ? left_bit $end
+$var parameter 2 @ preshift_i1 $end
+$upscope $end
+$scope begin genblk1[2] $end
+$var wire 1 A left_bit $end
+$var parameter 3 B preshift_i1 $end
+$upscope $end
+$scope begin genblk1[3] $end
+$var wire 1 C left_bit $end
+$var parameter 3 D preshift_i1 $end
+$upscope $end
+$scope begin genblk1[4] $end
+$var wire 1 E left_bit $end
+$var parameter 4 F preshift_i1 $end
+$upscope $end
+$scope begin genblk1[5] $end
+$var wire 1 G left_bit $end
+$var parameter 4 H preshift_i1 $end
+$upscope $end
+$scope begin genblk1[6] $end
+$var wire 1 I left_bit $end
+$var parameter 4 J preshift_i1 $end
+$upscope $end
+$scope begin genblk1[7] $end
+$var wire 1 K left_bit $end
+$var parameter 4 L preshift_i1 $end
+$upscope $end
+$scope begin genblk1[8] $end
+$var wire 1 M left_bit $end
+$var parameter 5 N preshift_i1 $end
+$upscope $end
+$scope begin genblk1[9] $end
+$var wire 1 O left_bit $end
+$var parameter 5 P preshift_i1 $end
+$upscope $end
+$scope begin genblk1[10] $end
+$var wire 1 Q left_bit $end
+$var parameter 5 R preshift_i1 $end
+$upscope $end
+$scope begin genblk1[11] $end
+$var wire 1 S left_bit $end
+$var parameter 5 T preshift_i1 $end
+$upscope $end
+$scope begin genblk1[12] $end
+$var wire 1 U left_bit $end
+$var parameter 5 V preshift_i1 $end
+$upscope $end
+$scope begin genblk1[13] $end
+$var wire 1 W left_bit $end
+$var parameter 5 X preshift_i1 $end
+$upscope $end
+$scope begin genblk2[0] $end
+$var wire 1 Y left_bit $end
+$var parameter 2 Z preshift_i2 $end
+$upscope $end
+$scope begin genblk2[1] $end
+$var wire 1 [ left_bit $end
+$var parameter 2 \ preshift_i2 $end
+$upscope $end
+$scope begin genblk2[2] $end
+$var wire 1 ] left_bit $end
+$var parameter 3 ^ preshift_i2 $end
+$upscope $end
+$scope begin genblk2[3] $end
+$var wire 1 _ left_bit $end
+$var parameter 3 ` preshift_i2 $end
+$upscope $end
+$scope begin genblk2[4] $end
+$var wire 1 a left_bit $end
+$var parameter 4 b preshift_i2 $end
+$upscope $end
+$scope begin genblk2[5] $end
+$var wire 1 c left_bit $end
+$var parameter 4 d preshift_i2 $end
+$upscope $end
+$scope begin genblk2[6] $end
+$var wire 1 e left_bit $end
+$var parameter 4 f preshift_i2 $end
+$upscope $end
+$scope begin genblk2[7] $end
+$var wire 1 g left_bit $end
+$var parameter 4 h preshift_i2 $end
+$upscope $end
+$scope begin genblk2[8] $end
+$var wire 1 i left_bit $end
+$var parameter 5 j preshift_i2 $end
+$upscope $end
+$scope begin genblk2[9] $end
+$var wire 1 k left_bit $end
+$var parameter 5 l preshift_i2 $end
+$upscope $end
+$scope begin genblk2[10] $end
+$var wire 1 m left_bit $end
+$var parameter 5 n preshift_i2 $end
+$upscope $end
+$scope begin genblk2[11] $end
+$var wire 1 o left_bit $end
+$var parameter 5 p preshift_i2 $end
+$upscope $end
+$scope begin genblk2[12] $end
+$var wire 1 q left_bit $end
+$var parameter 5 r preshift_i2 $end
+$upscope $end
+$scope begin genblk2[13] $end
+$var wire 1 s left_bit $end
+$var parameter 5 t preshift_i2 $end
+$upscope $end
+$scope begin genblk3[0] $end
+$var wire 1 u left_bit $end
+$var parameter 2 v preshift_i3 $end
+$upscope $end
+$scope begin genblk3[1] $end
+$var wire 1 w left_bit $end
+$var parameter 2 x preshift_i3 $end
+$upscope $end
+$scope begin genblk3[2] $end
+$var wire 1 y left_bit $end
+$var parameter 3 z preshift_i3 $end
+$upscope $end
+$scope begin genblk3[3] $end
+$var wire 1 { left_bit $end
+$var parameter 3 | preshift_i3 $end
+$upscope $end
+$scope begin genblk3[4] $end
+$var wire 1 } left_bit $end
+$var parameter 4 ~ preshift_i3 $end
+$upscope $end
+$scope begin genblk3[5] $end
+$var wire 1 !" left_bit $end
+$var parameter 4 "" preshift_i3 $end
+$upscope $end
+$scope begin genblk3[6] $end
+$var wire 1 #" left_bit $end
+$var parameter 4 $" preshift_i3 $end
+$upscope $end
+$scope begin genblk3[7] $end
+$var wire 1 %" left_bit $end
+$var parameter 4 &" preshift_i3 $end
+$upscope $end
+$scope begin genblk3[8] $end
+$var wire 1 '" left_bit $end
+$var parameter 5 (" preshift_i3 $end
+$upscope $end
+$scope begin genblk3[9] $end
+$var wire 1 )" left_bit $end
+$var parameter 5 *" preshift_i3 $end
+$upscope $end
+$scope begin genblk3[10] $end
+$var wire 1 +" left_bit $end
+$var parameter 5 ," preshift_i3 $end
+$upscope $end
+$scope begin genblk3[11] $end
+$var wire 1 -" left_bit $end
+$var parameter 5 ." preshift_i3 $end
+$upscope $end
+$scope begin genblk3[12] $end
+$var wire 1 /" left_bit $end
+$var parameter 5 0" preshift_i3 $end
+$upscope $end
+$scope begin genblk3[13] $end
+$var wire 1 1" left_bit $end
+$var parameter 5 2" preshift_i3 $end
+$upscope $end
+$scope begin genblk4[0] $end
+$var wire 1 3" left_bit $end
+$var parameter 2 4" preshift_i4 $end
+$upscope $end
+$scope begin genblk4[1] $end
+$var wire 1 5" left_bit $end
+$var parameter 2 6" preshift_i4 $end
+$upscope $end
+$scope begin genblk4[2] $end
+$var wire 1 7" left_bit $end
+$var parameter 3 8" preshift_i4 $end
+$upscope $end
+$scope begin genblk4[3] $end
+$var wire 1 9" left_bit $end
+$var parameter 3 :" preshift_i4 $end
+$upscope $end
+$scope begin genblk4[4] $end
+$var wire 1 ;" left_bit $end
+$var parameter 4 <" preshift_i4 $end
+$upscope $end
+$scope begin genblk4[5] $end
+$var wire 1 =" left_bit $end
+$var parameter 4 >" preshift_i4 $end
+$upscope $end
+$scope begin genblk4[6] $end
+$var wire 1 ?" left_bit $end
+$var parameter 4 @" preshift_i4 $end
+$upscope $end
+$scope begin genblk4[7] $end
+$var wire 1 A" left_bit $end
+$var parameter 4 B" preshift_i4 $end
+$upscope $end
+$scope begin genblk4[8] $end
+$var wire 1 C" left_bit $end
+$var parameter 5 D" preshift_i4 $end
+$upscope $end
+$scope begin genblk4[9] $end
+$var wire 1 E" left_bit $end
+$var parameter 5 F" preshift_i4 $end
+$upscope $end
+$scope begin genblk4[10] $end
+$var wire 1 G" left_bit $end
+$var parameter 5 H" preshift_i4 $end
+$upscope $end
+$scope begin genblk4[11] $end
+$var wire 1 I" left_bit $end
+$var parameter 5 J" preshift_i4 $end
+$upscope $end
+$scope begin genblk4[12] $end
+$var wire 1 K" left_bit $end
+$var parameter 5 L" preshift_i4 $end
+$upscope $end
+$scope begin genblk4[13] $end
+$var wire 1 M" left_bit $end
+$var parameter 5 N" preshift_i4 $end
+$upscope $end
+$scope begin genblk5[0] $end
+$var wire 1 O" right_bit $end
+$var parameter 2 P" postshift_i1 $end
+$upscope $end
+$scope begin genblk5[1] $end
+$var wire 1 Q" right_bit $end
+$var parameter 2 R" postshift_i1 $end
+$upscope $end
+$scope begin genblk5[2] $end
+$var wire 1 S" right_bit $end
+$var parameter 3 T" postshift_i1 $end
+$upscope $end
+$scope begin genblk5[3] $end
+$var wire 1 U" right_bit $end
+$var parameter 3 V" postshift_i1 $end
+$upscope $end
+$scope begin genblk5[4] $end
+$var wire 1 W" right_bit $end
+$var parameter 4 X" postshift_i1 $end
+$upscope $end
+$scope begin genblk5[5] $end
+$var wire 1 Y" right_bit $end
+$var parameter 4 Z" postshift_i1 $end
+$upscope $end
+$scope begin genblk5[6] $end
+$var wire 1 [" right_bit $end
+$var parameter 4 \" postshift_i1 $end
+$upscope $end
+$scope begin genblk5[7] $end
+$var wire 1 ]" right_bit $end
+$var parameter 4 ^" postshift_i1 $end
+$upscope $end
+$scope begin genblk5[8] $end
+$var wire 1 _" right_bit $end
+$var parameter 5 `" postshift_i1 $end
+$upscope $end
+$scope begin genblk5[9] $end
+$var wire 1 a" right_bit $end
+$var parameter 5 b" postshift_i1 $end
+$upscope $end
+$scope begin genblk5[10] $end
+$var wire 1 c" right_bit $end
+$var parameter 5 d" postshift_i1 $end
+$upscope $end
+$scope begin genblk5[11] $end
+$var wire 1 e" right_bit $end
+$var parameter 5 f" postshift_i1 $end
+$upscope $end
+$scope begin genblk5[12] $end
+$var wire 1 g" right_bit $end
+$var parameter 5 h" postshift_i1 $end
+$upscope $end
+$scope begin genblk5[13] $end
+$var wire 1 i" right_bit $end
+$var parameter 5 j" postshift_i1 $end
+$upscope $end
+$scope begin genblk5[14] $end
+$var wire 1 k" right_bit $end
+$var parameter 5 l" postshift_i1 $end
+$upscope $end
+$scope begin genblk6[0] $end
+$var wire 1 m" right_bit $end
+$var parameter 2 n" postshift_i2 $end
+$upscope $end
+$scope begin genblk6[1] $end
+$var wire 1 o" right_bit $end
+$var parameter 2 p" postshift_i2 $end
+$upscope $end
+$scope begin genblk6[2] $end
+$var wire 1 q" right_bit $end
+$var parameter 3 r" postshift_i2 $end
+$upscope $end
+$scope begin genblk6[3] $end
+$var wire 1 s" right_bit $end
+$var parameter 3 t" postshift_i2 $end
+$upscope $end
+$scope begin genblk6[4] $end
+$var wire 1 u" right_bit $end
+$var parameter 4 v" postshift_i2 $end
+$upscope $end
+$scope begin genblk6[5] $end
+$var wire 1 w" right_bit $end
+$var parameter 4 x" postshift_i2 $end
+$upscope $end
+$scope begin genblk6[6] $end
+$var wire 1 y" right_bit $end
+$var parameter 4 z" postshift_i2 $end
+$upscope $end
+$scope begin genblk6[7] $end
+$var wire 1 {" right_bit $end
+$var parameter 4 |" postshift_i2 $end
+$upscope $end
+$scope begin genblk6[8] $end
+$var wire 1 }" right_bit $end
+$var parameter 5 ~" postshift_i2 $end
+$upscope $end
+$scope begin genblk6[9] $end
+$var wire 1 !# right_bit $end
+$var parameter 5 "# postshift_i2 $end
+$upscope $end
+$scope begin genblk6[10] $end
+$var wire 1 ## right_bit $end
+$var parameter 5 $# postshift_i2 $end
+$upscope $end
+$scope begin genblk6[11] $end
+$var wire 1 %# right_bit $end
+$var parameter 5 &# postshift_i2 $end
+$upscope $end
+$scope begin genblk6[12] $end
+$var wire 1 '# right_bit $end
+$var parameter 5 (# postshift_i2 $end
+$upscope $end
+$scope begin genblk6[13] $end
+$var wire 1 )# right_bit $end
+$var parameter 5 *# postshift_i2 $end
+$upscope $end
+$scope begin genblk6[14] $end
+$var wire 1 +# right_bit $end
+$var parameter 5 ,# postshift_i2 $end
+$upscope $end
+$scope begin genblk7[0] $end
+$var wire 1 -# right_bit $end
+$var parameter 2 .# postshift_i3 $end
+$upscope $end
+$scope begin genblk7[1] $end
+$var wire 1 /# right_bit $end
+$var parameter 2 0# postshift_i3 $end
+$upscope $end
+$scope begin genblk7[2] $end
+$var wire 1 1# right_bit $end
+$var parameter 3 2# postshift_i3 $end
+$upscope $end
+$scope begin genblk7[3] $end
+$var wire 1 3# right_bit $end
+$var parameter 3 4# postshift_i3 $end
+$upscope $end
+$scope begin genblk7[4] $end
+$var wire 1 5# right_bit $end
+$var parameter 4 6# postshift_i3 $end
+$upscope $end
+$scope begin genblk7[5] $end
+$var wire 1 7# right_bit $end
+$var parameter 4 8# postshift_i3 $end
+$upscope $end
+$scope begin genblk7[6] $end
+$var wire 1 9# right_bit $end
+$var parameter 4 :# postshift_i3 $end
+$upscope $end
+$scope begin genblk7[7] $end
+$var wire 1 ;# right_bit $end
+$var parameter 4 <# postshift_i3 $end
+$upscope $end
+$scope begin genblk7[8] $end
+$var wire 1 =# right_bit $end
+$var parameter 5 ># postshift_i3 $end
+$upscope $end
+$scope begin genblk7[9] $end
+$var wire 1 ?# right_bit $end
+$var parameter 5 @# postshift_i3 $end
+$upscope $end
+$scope begin genblk7[10] $end
+$var wire 1 A# right_bit $end
+$var parameter 5 B# postshift_i3 $end
+$upscope $end
+$scope begin genblk7[11] $end
+$var wire 1 C# right_bit $end
+$var parameter 5 D# postshift_i3 $end
+$upscope $end
+$scope begin genblk7[12] $end
+$var wire 1 E# right_bit $end
+$var parameter 5 F# postshift_i3 $end
+$upscope $end
+$scope begin genblk7[13] $end
+$var wire 1 G# right_bit $end
+$var parameter 5 H# postshift_i3 $end
+$upscope $end
+$scope begin genblk7[14] $end
+$var wire 1 I# right_bit $end
+$var parameter 5 J# postshift_i3 $end
+$upscope $end
+$scope begin genblk8[0] $end
+$var wire 1 K# right_bit $end
+$var parameter 2 L# postshift_i4 $end
+$upscope $end
+$scope begin genblk8[1] $end
+$var wire 1 M# right_bit $end
+$var parameter 2 N# postshift_i4 $end
+$upscope $end
+$scope begin genblk8[2] $end
+$var wire 1 O# right_bit $end
+$var parameter 3 P# postshift_i4 $end
+$upscope $end
+$scope begin genblk8[3] $end
+$var wire 1 Q# right_bit $end
+$var parameter 3 R# postshift_i4 $end
+$upscope $end
+$scope begin genblk8[4] $end
+$var wire 1 S# right_bit $end
+$var parameter 4 T# postshift_i4 $end
+$upscope $end
+$scope begin genblk8[5] $end
+$var wire 1 U# right_bit $end
+$var parameter 4 V# postshift_i4 $end
+$upscope $end
+$scope begin genblk8[6] $end
+$var wire 1 W# right_bit $end
+$var parameter 4 X# postshift_i4 $end
+$upscope $end
+$scope begin genblk8[7] $end
+$var wire 1 Y# right_bit $end
+$var parameter 4 Z# postshift_i4 $end
+$upscope $end
+$scope begin genblk8[8] $end
+$var wire 1 [# right_bit $end
+$var parameter 5 \# postshift_i4 $end
+$upscope $end
+$scope begin genblk8[9] $end
+$var wire 1 ]# right_bit $end
+$var parameter 5 ^# postshift_i4 $end
+$upscope $end
+$scope begin genblk8[10] $end
+$var wire 1 _# right_bit $end
+$var parameter 5 `# postshift_i4 $end
+$upscope $end
+$scope begin genblk8[11] $end
+$var wire 1 a# right_bit $end
+$var parameter 5 b# postshift_i4 $end
+$upscope $end
+$scope begin genblk8[12] $end
+$var wire 1 c# right_bit $end
+$var parameter 5 d# postshift_i4 $end
+$upscope $end
+$scope begin genblk8[13] $end
+$var wire 1 e# right_bit $end
+$var parameter 5 f# postshift_i4 $end
+$upscope $end
+$scope begin genblk8[14] $end
+$var wire 1 g# right_bit $end
+$var parameter 5 h# postshift_i4 $end
+$upscope $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+$comment Show the parameter values. $end
+$dumpall
+b1110 h#
+b1101 f#
+b1100 d#
+b1011 b#
+b1010 `#
+b1001 ^#
+b1000 \#
+b111 Z#
+b110 X#
+b101 V#
+b100 T#
+b11 R#
+b10 P#
+b1 N#
+b0 L#
+b1110 J#
+b1101 H#
+b1100 F#
+b1011 D#
+b1010 B#
+b1001 @#
+b1000 >#
+b111 <#
+b110 :#
+b101 8#
+b100 6#
+b11 4#
+b10 2#
+b1 0#
+b0 .#
+b1110 ,#
+b1101 *#
+b1100 (#
+b1011 &#
+b1010 $#
+b1001 "#
+b1000 ~"
+b111 |"
+b110 z"
+b101 x"
+b100 v"
+b11 t"
+b10 r"
+b1 p"
+b0 n"
+b1110 l"
+b1101 j"
+b1100 h"
+b1011 f"
+b1010 d"
+b1001 b"
+b1000 `"
+b111 ^"
+b110 \"
+b101 Z"
+b100 X"
+b11 V"
+b10 T"
+b1 R"
+b0 P"
+b1101 N"
+b1100 L"
+b1011 J"
+b1010 H"
+b1001 F"
+b1000 D"
+b111 B"
+b110 @"
+b101 >"
+b100 <"
+b11 :"
+b10 8"
+b1 6"
+b0 4"
+b1101 2"
+b1100 0"
+b1011 ."
+b1010 ,"
+b1001 *"
+b1000 ("
+b111 &"
+b110 $"
+b101 ""
+b100 ~
+b11 |
+b10 z
+b1 x
+b0 v
+b1101 t
+b1100 r
+b1011 p
+b1010 n
+b1001 l
+b1000 j
+b111 h
+b110 f
+b101 d
+b100 b
+b11 `
+b10 ^
+b1 \
+b0 Z
+b1101 X
+b1100 V
+b1011 T
+b1010 R
+b1001 P
+b1000 N
+b111 L
+b110 J
+b101 H
+b100 F
+b11 D
+b10 B
+b1 @
+b0 >
+$end
+#0
+$dumpvars
+xg#
+xe#
+xc#
+xa#
+x_#
+x]#
+x[#
+0Y#
+0W#
+0U#
+0S#
+0Q#
+0O#
+0M#
+0K#
+xI#
+xG#
+xE#
+xC#
+xA#
+x?#
+x=#
+x;#
+x9#
+x7#
+x5#
+03#
+01#
+0/#
+0-#
+x+#
+x)#
+x'#
+x%#
+x##
+x!#
+x}"
+x{"
+xy"
+xw"
+xu"
+xs"
+xq"
+0o"
+0m"
+xk"
+xi"
+xg"
+xe"
+xc"
+xa"
+x_"
+x]"
+x["
+xY"
+xW"
+xU"
+xS"
+xQ"
+0O"
+0M"
+0K"
+0I"
+0G"
+0E"
+0C"
+0A"
+0?"
+0="
+0;"
+09"
+07"
+05"
+03"
+01"
+0/"
+0-"
+0+"
+0)"
+0'"
+0%"
+0#"
+0!"
+0}
+0{
+0y
+0w
+0u
+0s
+0q
+0o
+0m
+0k
+0i
+0g
+0e
+0c
+0a
+0_
+0]
+0[
+0Y
+0W
+0U
+0S
+0Q
+0O
+0M
+0K
+0I
+0G
+0E
+0C
+0A
+0?
+0=
+b0 <
+0;
+b0 :
+b0 9
+bx 8
+bx 7
+bx 6
+bx 5
+x4
+03
+bx 2
+bx 1
+bx 0
+bx /
+bx .
+b0 -
+b0 ,
+b0 +
+b0 *
+bx )
+b0 (
+b0 '
+0&
+0%
+1$
+b0 #
+b0 "
+b0 !
+$end
+#1
+0$
+#2
+0g#
+0c#
+0e#
+0I#
+0G#
+0E#
+0C#
+0A#
+0?#
+0=#
+0;#
+09#
+05#
+07#
+0[#
+0]#
+0_#
+0a#
+0+#
+0)#
+0'#
+0%#
+0##
+0!#
+0}"
+0{"
+0y"
+0w"
+0u"
+0s"
+0q"
+b0 0
+b0 /
+b0 .
+b0 1
+0k"
+0i"
+0g"
+0e"
+0c"
+0a"
+0_"
+0]"
+0["
+0Y"
+0W"
+0U"
+0S"
+0Q"
+b1111 8
+b0 2
+b0 )
+b0 7
+b0 5
+b0 6
+04
+1&
+1$
+#3
+0$
+#4
+b10100000000000 *
+19"
+1="
+b10100000000000 +
+1%"
+1)"
+b10100000000000 ,
+1k
+1o
+b10100000000000 -
+1S
+b1 9
+b1000000000000 :
+1W
+1q
+1s
+1+"
+1-"
+1/"
+11"
+1?"
+1A"
+1C"
+1E"
+1G"
+1I"
+1K"
+1M"
+1;
+13
+b1 5
+b1000101000000000000 #
+b1000101000000000000 (
+b1010000000000000 "
+b1010000000000000 '
+1%
+1$
+#5
+0$
+#6
+b10000000000000 !
+b10000000000000 <
+b100000000000000 .
+1;"
+b1100000000000 *
+b100000000000000 /
+0="
+1'"
+b1100000000000 +
+b100000000000000 0
+0)"
+1+#
+1m
+b1100000000000 ,
+b1000000000000 1
+0o
+1g"
+b11 8
+1U
+b1100000000000 -
+b100000000000 2
+b11000000000000 :
+0W
+0q
+0s
+0+"
+0-"
+0/"
+01"
+0?"
+0A"
+0C"
+0E"
+0G"
+0I"
+0K"
+0M"
+0;
+b110100000000000 7
+b100000000000 )
+b10000000000000 6
+b11 5
+14
+b111000000000000 #
+b111000000000000 (
+1$
+#7
+0$
+#8
+b1011100000000000 !
+b1011100000000000 <
+b111000000000000 .
+b111000000000000 /
+b111000000000000 0
+b111000000000000 1
+1k"
+1i"
+b1 8
+b11100000000000 2
+b11100000000000 )
+b1100000000000 7
+0%
+1$
+#9
+0$
+#10
+04
+1$
+#11
+0$
+#12
+1$
+#13
+0$
+#14
+1$
+#15
+0$
+#16
+1$
+#17
+0$
+#18
+1$
+#19
+0$
+#20
+1$

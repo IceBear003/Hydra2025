@@ -1,0 +1,2 @@
+Target    0 Location = (   9,    0) Power = 4bbb5 Noise = 37ccb
+Target    1 Location = (  11,    0) Power = 526a4 Noise = 377ed
